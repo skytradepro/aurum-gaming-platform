@@ -1,0 +1,14 @@
+{
+  "name": "@aurum/i18n",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Locales (EN, FR, AR with RTL), message catalogs and the completeness checker. Add a language by adding one JSON file.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./check": "./src/check.ts",
+    "./messages/*.json": "./messages/*.json"
+  },
+  "types": "./src/index.ts",
+  "sideEffects": false
+}

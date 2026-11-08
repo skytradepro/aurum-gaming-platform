@@ -1,0 +1,9 @@
+-- =============================================================================
+-- Aurum - migration 0012: Russian and Turkish interface languages.
+-- The translation files are packages/i18n/messages/ru.json and tr.json.
+-- The Super Admin can still turn them off in the Languages screen.
+-- =============================================================================
+insert into languages (code, native_name, english_name, direction, is_enabled, is_default, sort_order) values
+  ('ru', 'Русский', 'Russian', 'ltr', true, false, 4),
+  ('tr', 'Türkçe', 'Turkish', 'ltr', true, false, 5)
+on conflict (code) do nothing;

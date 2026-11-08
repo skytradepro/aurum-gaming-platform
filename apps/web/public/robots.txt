@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /*/admin
+Disallow: /*/skyx
+Disallow: /*/shop
+Disallow: /*/account
+Disallow: /api/

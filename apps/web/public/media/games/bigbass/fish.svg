@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffe08a"/>
+      <stop offset="45%" stop-color="#fb923c"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+    <linearGradient id="body" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#bbf7d0"/>
+      <stop offset="40%" stop-color="#4ade80"/>
+      <stop offset="100%" stop-color="#166534"/>
+    </linearGradient>
+    <linearGradient id="belly" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fef9c3"/>
+      <stop offset="100%" stop-color="#fb923c"/>
+    </linearGradient>
+  </defs>
+  <rect x="6" y="8" width="116" height="112" rx="18" fill="url(#tile)" stroke="#fff7c2" stroke-width="3"/>
+  <ellipse cx="58" cy="64" rx="42" ry="28" fill="url(#body)" stroke="#14532d" stroke-width="2.4"/>
+  <ellipse cx="52" cy="72" rx="28" ry="14" fill="url(#belly)" opacity=".92"/>
+  <path d="M96 58 L120 42 L120 86 L96 70 Z" fill="#166534" stroke="#14532d" stroke-width="1.4"/>
+  <path d="M70 40 Q78 28 88 38" fill="#166534"/>
+  <circle cx="36" cy="58" r="8" fill="#fff"/>
+  <circle cx="34" cy="57" r="4" fill="#0f172a"/>
+  <path d="M48 48 Q64 40 78 48" fill="none" stroke="#14532d" stroke-width="2" opacity=".45"/>
+</svg>

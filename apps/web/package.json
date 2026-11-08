@@ -1,0 +1,23 @@
+{
+  "name": "@aurum/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@aurum/i18n": "*",
+    "@aurum/money": "*",
+    "@aurum/shared": "*",
+    "next": "^15.5.4",
+    "next-intl": "^4.3.9",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.9"
+  }
+}

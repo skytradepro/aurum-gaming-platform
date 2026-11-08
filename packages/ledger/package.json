@@ -1,0 +1,17 @@
+{
+  "name": "@aurum/ledger",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Typed access to the append-only ledger: post entries (idempotent, row-locked in PostgreSQL), read wallets and statements, verify the books.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "types": "./src/index.ts",
+  "dependencies": {
+    "@aurum/db": "*",
+    "@aurum/money": "*",
+    "@aurum/shared": "*"
+  },
+  "sideEffects": false
+}

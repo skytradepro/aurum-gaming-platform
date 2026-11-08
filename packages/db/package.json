@@ -1,0 +1,17 @@
+{
+  "name": "@aurum/db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "PostgreSQL access (pool, transactions with retry), SQL migration runner and database error mapping.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./testing": "./src/testing.ts"
+  },
+  "types": "./src/index.ts",
+  "dependencies": {
+    "@aurum/shared": "*",
+    "pg": "^8.13.0"
+  },
+  "sideEffects": false
+}

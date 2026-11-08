@@ -1,0 +1,23 @@
+**/node_modules
+**/.next
+.git
+.env
+.env.*
+_quarantine
+banner-art
+storage/*
+!storage/cache/
+!storage/cache/*.json
+.cursor
+**/*.tsbuildinfo
+
+# local backups, notes and helper files: never part of an image
+_backups
+Claude outputs
+**/*.local.md
+
+# deploy secrets and data dumps: never inside an image
+deploy/.env
+deploy/.ssh
+deploy/sync
+deploy/TEAM-GATE.txt

@@ -1,0 +1,32 @@
+---
+description: Aurum project safety and working rules (always apply)
+alwaysApply: true
+---
+
+# Aurum Gaming Platform: mandatory rules
+
+## Scope protection
+- Work ONLY inside `C:\Users\PC\Desktop\aurum-gaming-platform`.
+- NEVER read, edit, scan, run commands in, move or delete any other project or folder
+  (SkyX Chain, AI trading bot, HANNIBAL, SkyTrade Pro / SUSDT, or anything else on the Desktop
+  or the computer) without the user's explicit permission in that same request.
+- Every shell command must run with its working directory inside this project.
+- System-level installs (for example PostgreSQL) are allowed only when they are required by this
+  project; they must not touch other projects' data, configuration, ports or databases.
+
+## Autonomy
+- The user wants the agent to act on its own: inspect, build, run and test without asking
+  for every small step.
+- Ask first ONLY for: destructive actions, deployment, DNS/domain purchase, external
+  paid or real-money integrations, and anything outside this folder.
+
+## Communication
+- Talk to the user in Arabic, short and clear. Code, file names and comments in English.
+- Report real results only. Never claim a feature or test works unless it was actually run.
+
+## Product rules (do not change without approval)
+- Languages EN / FR / AR (RTL), configurable currencies, money as integer minor units.
+- Players recharge and withdraw cash at physical shops only. No online withdrawal,
+  bank transfer or crypto payout.
+- Immutable ledger, idempotent operations, audit log, Super Admin created only by CLI.
+- No fake integrations, no mock transactions. Demo data only behind SHOW_DEMO_DATA.

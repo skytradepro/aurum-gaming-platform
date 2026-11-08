@@ -1,0 +1,36 @@
+{
+  "name": "aurum-gaming-platform",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Aurum Gaming Platform: public website, user accounts, Super Admin and Admin dashboards, ledger-based balance management, EN/FR/AR (RTL) and multi-currency from day one.",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env --test \"packages/*/test/**/*.test.ts\" \"apps/*/test/**/*.test.ts\"",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "i18n:check": "node --disable-warning=ExperimentalWarning packages/i18n/scripts/check.ts",
+    "db:migrate": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env packages/db/scripts/migrate.ts",
+    "api:start": "npm run start -w @aurum/api",
+    "api:dev": "npm run dev -w @aurum/api",
+    "web:dev": "npm run dev -w @aurum/web",
+    "web:build": "npm run build -w @aurum/web",
+    "web:start": "npm run start -w @aurum/web",
+    "dev:start": "powershell -ExecutionPolicy Bypass -File scripts/dev-start.ps1",
+    "create-super-admin": "npm run create-super-admin -w @aurum/api --",
+    "seed:demo": "npm run seed:demo -w @aurum/api",
+    "seed:pages": "npm run seed:pages -w @aurum/api"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.0",
+    "typescript": "~6.0.3"
+  },
+  "dependencies": {
+    "@next/swc-win32-x64-msvc": "^15.5.4"
+  }
+}

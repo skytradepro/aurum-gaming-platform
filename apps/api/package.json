@@ -1,0 +1,24 @@
+{
+  "name": "@aurum/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Aurum HTTP API (Node.js, no framework): authentication, accounts, ledger operations, dashboards and public content.",
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning --env-file-if-exists=../../.env src/main.ts",
+    "dev": "node --disable-warning=ExperimentalWarning --watch --env-file-if-exists=../../.env src/main.ts",
+    "create-super-admin": "node --disable-warning=ExperimentalWarning --env-file-if-exists=../../.env scripts/create-super-admin.ts",
+    "seed:demo": "node --disable-warning=ExperimentalWarning --env-file-if-exists=../../.env scripts/seed-demo.ts",
+    "seed:pages": "node --disable-warning=ExperimentalWarning --env-file-if-exists=../../.env scripts/seed-pages.ts",
+    "apilx:audit-env": "node --disable-warning=ExperimentalWarning --env-file-if-exists=../../.env scripts/apilx-audit-env.ts",
+    "apilx:probe-gamelist": "node --disable-warning=ExperimentalWarning --env-file-if-exists=../../.env scripts/apilx-probe-gamelist.ts",
+    "apilx:sync-catalog": "node --disable-warning=ExperimentalWarning --env-file-if-exists=../../.env scripts/apilx-sync-catalog.ts"
+  },
+  "dependencies": {
+    "@aurum/db": "*",
+    "@aurum/i18n": "*",
+    "@aurum/ledger": "*",
+    "@aurum/money": "*",
+    "@aurum/shared": "*"
+  }
+}

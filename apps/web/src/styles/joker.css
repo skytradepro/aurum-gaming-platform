@@ -1,0 +1,282 @@
+/* ==========================================================================
+   Joker: player support character (support card, chat button, chat panel)
+   ========================================================================== */
+
+.joker-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.joker-art .jk-bell {
+  transform-box: fill-box;
+  transform-origin: 50% 0%;
+  animation: jk-bell 2.6s ease-in-out infinite;
+}
+.joker-art .jk-bell-c {
+  animation-delay: 0.4s;
+}
+.joker-art .jk-bell-r {
+  animation-delay: 0.8s;
+}
+.joker-art .jk-wink {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: jk-wink 5s ease-in-out infinite;
+}
+@keyframes jk-bell {
+  0%,
+  100% {
+    transform: rotate(-10deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+}
+@keyframes jk-wink {
+  0%,
+  88%,
+  100% {
+    transform: scaleY(1);
+  }
+  92% {
+    transform: scaleY(0.1);
+  }
+}
+
+/* --- support card in the page margin --- */
+.ai-holo.is-joker.is-on {
+  border-color: rgba(233, 196, 106, 0.7);
+  background:
+    radial-gradient(70% 45% at 50% 38%, rgba(192, 132, 252, 0.45), transparent 70%),
+    radial-gradient(90% 60% at 50% 110%, rgba(245, 197, 24, 0.28), transparent 70%),
+    linear-gradient(180deg, #1c0c35 0%, #12081f 55%, #07040c 100%);
+  box-shadow: 0 0 0 1px rgba(192, 132, 252, 0.35), 0 0 40px rgba(168, 85, 247, 0.35), 0 24px 50px rgba(0, 0, 0, 0.6);
+}
+.ai-holo.is-joker:hover {
+  border-color: #ffd34d;
+  box-shadow: 0 0 0 1px rgba(255, 211, 77, 0.6), 0 0 60px rgba(168, 85, 247, 0.55), 0 24px 50px rgba(0, 0, 0, 0.6);
+}
+.ai-holo.is-joker .jk-rays {
+  position: absolute;
+  left: 50%;
+  top: 36%;
+  width: 190%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  background: repeating-conic-gradient(from 0deg, rgba(255, 211, 77, 0.16) 0deg 9deg, transparent 9deg 22deg);
+  mask-image: radial-gradient(circle, #000 18%, transparent 62%);
+  -webkit-mask-image: radial-gradient(circle, #000 18%, transparent 62%);
+  animation: jk-spin 26s linear infinite;
+}
+.ai-holo.is-joker .jk-stage {
+  position: absolute;
+  left: 50%;
+  top: 13%;
+  width: 80%;
+  aspect-ratio: 200 / 220;
+  translate: -50% 0;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 18px rgba(192, 132, 252, 0.45));
+  animation: jk-bob 3.6s ease-in-out infinite;
+}
+.ai-holo.is-joker .ai-holo-glow {
+  background: radial-gradient(circle, rgba(216, 180, 254, 0.7), rgba(168, 85, 247, 0.25) 45%, transparent 70%);
+}
+.ai-holo.is-joker .ai-holo-glow.g3 {
+  background: radial-gradient(circle, rgba(255, 220, 140, 0.8), rgba(233, 196, 106, 0.3) 45%, transparent 70%);
+}
+.ai-holo.is-joker .ai-holo-scan {
+  display: none;
+}
+.ai-holo.is-joker .ai-holo-tag {
+  border-color: rgba(255, 211, 77, 0.7);
+  background: rgba(28, 12, 53, 0.78);
+  box-shadow: 0 0 14px rgba(168, 85, 247, 0.45);
+}
+.ai-holo.is-joker .ai-holo-text {
+  background: linear-gradient(0deg, rgba(10, 5, 18, 0.96) 0%, rgba(10, 5, 18, 0.7) 60%, transparent 100%);
+}
+.ai-holo.is-joker .ai-holo-text small {
+  color: #e9d5ff;
+}
+.ai-holo.is-joker .ai-holo-text em {
+  color: #1a1206;
+  background: var(--gold-grad);
+  box-shadow: 0 0 16px rgba(245, 197, 24, 0.55);
+}
+@keyframes jk-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+@keyframes jk-bob {
+  50% {
+    transform: translateY(-5px) rotate(-1.5deg);
+  }
+}
+
+/* --- chat button --- */
+.ai-fab.is-joker {
+  background: radial-gradient(circle at 50% 35%, #3b1a63, #12081f 72%);
+  border-color: rgba(255, 211, 77, 0.8);
+  overflow: visible;
+}
+.ai-fab .ai-fab-joker {
+  width: 50px;
+  height: 55px;
+  margin-top: -6px;
+}
+@media (max-width: 1179px) {
+  .ai-fab .ai-fab-joker {
+    width: 44px;
+    height: 48px;
+  }
+}
+
+/* --- chat panel --- */
+.ai-panel.is-joker {
+  grid-template-rows: auto 1fr auto auto auto;
+  border-color: rgba(192, 132, 252, 0.45);
+  background:
+    radial-gradient(90% 40% at 50% 0%, rgba(168, 85, 247, 0.2), transparent 70%),
+    linear-gradient(180deg, #160c22, #09070c);
+}
+.ai-avatar {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 35%, #3b1a63, #12081f 75%);
+  border: 1px solid rgba(255, 211, 77, 0.6);
+  overflow: hidden;
+}
+.ai-avatar .joker-art {
+  width: 118%;
+  height: 118%;
+  margin-top: 10%;
+}
+.ai-avatar.is-big {
+  width: 42px;
+  height: 42px;
+  overflow: visible;
+  box-shadow: 0 0 14px rgba(168, 85, 247, 0.5);
+}
+.ai-avatar.is-big .joker-art {
+  width: 112%;
+  height: 112%;
+  margin-top: -2px;
+}
+.ai-online {
+  position: absolute;
+  bottom: 0;
+  inset-inline-end: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #22c55e;
+  border: 2px solid #160c22;
+}
+.ai-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.45rem;
+  max-width: 94%;
+}
+.ai-row .ai-msg {
+  max-width: none;
+}
+.ai-x.on {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.ai-dots {
+  display: inline-flex;
+  gap: 3px;
+  margin-inline-end: 0.4rem;
+  vertical-align: middle;
+}
+.ai-dots i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: jk-dot 1s ease-in-out infinite;
+}
+.ai-dots i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.ai-dots i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes jk-dot {
+  50% {
+    transform: translateY(-4px);
+    opacity: 0.5;
+  }
+}
+.ai-topics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+.ai-topics button {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 40px;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid rgba(192, 132, 252, 0.35);
+  border-radius: 12px;
+  background: rgba(168, 85, 247, 0.08);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: start;
+  cursor: pointer;
+}
+.ai-topics button:hover {
+  border-color: var(--gold);
+  background: rgba(245, 197, 24, 0.08);
+}
+.ai-links {
+  display: flex;
+  gap: 0.35rem;
+  padding: 0.55rem 0.8rem 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-top: 1px solid rgba(233, 196, 106, 0.14);
+}
+.ai-links::-webkit-scrollbar {
+  display: none;
+}
+.ai-links a {
+  flex: none;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid rgba(233, 196, 106, 0.35);
+  border-radius: 999px;
+  color: var(--gold);
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.ai-links a:hover {
+  background: rgba(245, 197, 24, 0.1);
+}
+.ai-panel.is-joker .ai-form {
+  border-top: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .joker-art .jk-bell,
+  .joker-art .jk-wink,
+  .ai-holo.is-joker .jk-rays,
+  .ai-holo.is-joker .jk-stage,
+  .ai-dots i {
+    animation: none;
+  }
+}

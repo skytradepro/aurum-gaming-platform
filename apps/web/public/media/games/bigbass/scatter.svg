@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <radialGradient id="sky" cx="50%" cy="32%" r="70%">
+      <stop offset="0%" stop-color="#fdba74"/>
+      <stop offset="42%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0e7490"/>
+    </radialGradient>
+    <linearGradient id="bass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#86efac"/>
+      <stop offset="55%" stop-color="#22c55e"/>
+      <stop offset="100%" stop-color="#166534"/>
+    </linearGradient>
+    <linearGradient id="rib" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+  </defs>
+  <circle cx="64" cy="58" r="52" fill="url(#sky)" stroke="#fde047" stroke-width="3"/>
+  <ellipse cx="64" cy="86" rx="40" ry="10" fill="#0284c7" opacity=".55"/>
+  <path d="M86 18 L94 6 L82 16 Z" fill="#64748b"/>
+  <path d="M86 18 Q74 32 70 46" fill="none" stroke="#cbd5e1" stroke-width="1.6"/>
+  <circle cx="70" cy="46" r="2.4" fill="#fbbf24"/>
+  <ellipse cx="62" cy="58" rx="34" ry="18" fill="url(#bass)" stroke="#14532d" stroke-width="2" transform="rotate(-16 62 58)"/>
+  <ellipse cx="56" cy="62" rx="22" ry="10" fill="#fde047" opacity=".85" transform="rotate(-16 56 62)"/>
+  <path d="M90 52 L112 42 L112 66 L90 58 Z" fill="#166534" transform="rotate(-16 101 54)"/>
+  <circle cx="42" cy="52" r="5.5" fill="#fff"/>
+  <circle cx="41" cy="51" r="2.6" fill="#0f172a"/>
+  <path d="M18 104 H110 L100 118 H28 Z" fill="url(#rib)" stroke="#facc15" stroke-width="2"/>
+  <text x="64" y="115" text-anchor="middle" font-family="Impact,Arial Black,sans-serif" font-size="11" fill="#fde047" letter-spacing="1.4">SCATTER</text>
+</svg>

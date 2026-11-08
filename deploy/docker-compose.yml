@@ -1,0 +1,126 @@
+# Aurum - single-server deployment for TEAM TESTING (not a public launch).
+# Usage: see deploy/DEPLOY.md
+name: aurum
+
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+      POSTGRES_DB: aurum
+      AURUM_APP_PASSWORD: ${AURUM_APP_PASSWORD:?set AURUM_APP_PASSWORD}
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+      - ./db-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d aurum"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  migrate:
+    build: { context: .., dockerfile: deploy/Dockerfile }
+    command: ["npm", "run", "db:migrate"]
+    restart: "no"
+    depends_on: { db: { condition: service_healthy } }
+    environment:
+      # Schema changes need the owner role, not the application role.
+      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@db:5432/aurum
+
+  api:
+    build: { context: .., dockerfile: deploy/Dockerfile }
+    entrypoint: ["sh", "deploy/api-entrypoint.sh"]
+    command: ["npm", "run", "api:start"]
+    restart: unless-stopped
+    depends_on:
+      db: { condition: service_healthy }
+      migrate: { condition: service_completed_successfully }
+    environment:
+      NODE_ENV: production
+      API_HOST: 0.0.0.0
+      API_PORT: "4000"
+      DATABASE_URL: postgres://aurum_app:${AURUM_APP_PASSWORD}@db:5432/aurum
+      DATABASE_SSL: "false"
+      WEB_ORIGIN: https://${SITE_ADDRESS:?set SITE_ADDRESS},https://hannibalgamer.fr
+      COOKIE_SECURE: "true"
+      SHOW_DEMO_DATA: "false"
+      TRUST_PROXY_HOPS: "1"
+      UPLOAD_DIR: /data/uploads
+      AURUM_STORAGE_CACHE: /app/storage/cache
+      LOG_LEVEL: info
+      RATES_API_URL: ${RATES_API_URL:-}
+      INHOUSE_GAMES: ${INHOUSE_GAMES:-false}
+      FOOTBALL_API_KEY: ${FOOTBALL_API_KEY:-}
+      FOOTBALL_LIVE_CACHE_SECONDS: ${FOOTBALL_LIVE_CACHE_SECONDS:-20}
+      FOOTBALL_ODDS_MARGIN_PERCENT: ${FOOTBALL_ODDS_MARGIN_PERCENT:-0}
+      FOOTBALL_BOOKMAKER_ID: ${FOOTBALL_BOOKMAKER_ID:-0}
+      FOOTBALL_ODDS_MAX_PAGES: ${FOOTBALL_ODDS_MAX_PAGES:-30}
+      FOOTBALL_LIVE_ODDS_SECONDS: ${FOOTBALL_LIVE_ODDS_SECONDS:-10}
+      FOOTBALL_DETAIL_LIVE_SECONDS: ${FOOTBALL_DETAIL_LIVE_SECONDS:-20}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-openai/gpt-4o-mini}
+      BANK_TRANSFER_ACCOUNT_NAME: ${BANK_TRANSFER_ACCOUNT_NAME:-}
+      BANK_TRANSFER_IBAN: ${BANK_TRANSFER_IBAN:-}
+      BANK_TRANSFER_BANK_NAME: ${BANK_TRANSFER_BANK_NAME:-}
+      BANK_TRANSFER_BANK_ADDRESS: ${BANK_TRANSFER_BANK_ADDRESS:-}
+      BANK_TRANSFER_BIC: ${BANK_TRANSFER_BIC:-}
+      BREVO_API_KEY: ${BREVO_API_KEY:-}
+      MAIL_FROM_EMAIL: ${MAIL_FROM_EMAIL:-}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME:-Hannibal}
+      AGGREGATOR_NAME: ${AGGREGATOR_NAME:-}
+      AGGREGATOR_API_URL: ${AGGREGATOR_API_URL:-}
+      AGGREGATOR_OPERATOR_ID: ${AGGREGATOR_OPERATOR_ID:-}
+      AGGREGATOR_SECRET: ${AGGREGATOR_SECRET:-}
+      AGGREGATOR_SIGNATURE_HEADER: ${AGGREGATOR_SIGNATURE_HEADER:-x-signature}
+      AGGREGATOR_SESSION_MINUTES: ${AGGREGATOR_SESSION_MINUTES:-240}
+      GAME_SECRET: ${GAME_SECRET:-}
+      APILX_AGENT_ID: ${APILX_AGENT_ID:-}
+      APILX_PRAGMATIC_API_URL: ${APILX_PRAGMATIC_API_URL:-}
+      APILX_PRAGMATIC_TOKEN: ${APILX_PRAGMATIC_TOKEN:-}
+      APILX_PRAGMATIC_SECRET: ${APILX_PRAGMATIC_SECRET:-}
+      APILX_AMATIC_API_URL: ${APILX_AMATIC_API_URL:-}
+      APILX_AMATIC_TOKEN: ${APILX_AMATIC_TOKEN:-}
+      APILX_AMATIC_SECRET: ${APILX_AMATIC_SECRET:-}
+      APILX_PGSOFT_API_URL: ${APILX_PGSOFT_API_URL:-}
+      APILX_PGSOFT_TOKEN: ${APILX_PGSOFT_TOKEN:-}
+      APILX_PGSOFT_SECRET: ${APILX_PGSOFT_SECRET:-}
+      APILX_AMUSNET_API_URL: ${APILX_AMUSNET_API_URL:-}
+      APILX_AMUSNET_TOKEN: ${APILX_AMUSNET_TOKEN:-}
+      APILX_AMUSNET_SECRET: ${APILX_AMUSNET_SECRET:-}
+    volumes:
+      - uploads:/data/uploads
+      - ../storage/cache:/app/storage/cache
+
+  web:
+    build: { context: .., dockerfile: deploy/Dockerfile }
+    command: ["npm", "run", "start", "-w", "@aurum/web", "--", "-H", "0.0.0.0", "-p", "3000"]
+    restart: unless-stopped
+    depends_on: [api]
+    environment:
+      NODE_ENV: production
+      API_INTERNAL_URL: http://api:4000
+      ADMIN_SECRET_PATH: ${ADMIN_SECRET_PATH:-}
+    volumes:
+      - ../apps/web/public/media:/app/apps/web/public/media:ro
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on: [web]
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddydata:/data
+      - caddyconfig:/config
+
+volumes:
+  dbdata:
+  uploads:
+  caddydata:
+  caddyconfig:

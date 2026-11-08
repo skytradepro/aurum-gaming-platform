@@ -1,0 +1,10 @@
+# HTTPS reverse proxy for the public site.
+# With a real domain in SITE_ADDRESS, Caddy gets a certificate automatically.
+# With an IP address, add "tls internal" below (browser shows a certificate warning).
+# Optional team gate: uncomment basic_auth and set BASIC_AUTH_* in deploy/.env.
+# SITE_ADDRESS = primary site (e.g. hanibalgamer.fr). hannibalgamer.fr = API LX callback host (must hit same stack).
+{$SITE_ADDRESS}, hannibalgamer.fr {
+	encode gzip zstd
+	header -Server
+	reverse_proxy web:3000
+}

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3ec5e8"/>
+      <stop offset="35%" stop-color="#0e7a9a"/>
+      <stop offset="100%" stop-color="#043248"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="50%" cy="0%" r="65%">
+      <stop offset="0%" stop-color="rgba(255,230,140,0.55)"/>
+      <stop offset="100%" stop-color="rgba(255,230,140,0)"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="420" fill="url(#sea)"/>
+  <rect width="800" height="420" fill="url(#sun)"/>
+  <g fill="rgba(255,255,255,0.25)">
+    <circle cx="120" cy="380" r="4"/><circle cx="125" cy="340" r="3"/><circle cx="118" cy="300" r="5"/>
+    <circle cx="680" cy="390" r="4"/><circle cx="672" cy="350" r="3"/><circle cx="685" cy="310" r="5"/>
+    <circle cx="400" cy="400" r="3"/><circle cx="395" cy="360" r="4"/><circle cx="405" cy="320" r="3"/>
+  </g>
+</svg>

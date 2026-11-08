@@ -1,0 +1,27 @@
+# dependencies and build output
+node_modules/
+.next/
+dist/
+coverage/
+test-results/
+screenshots-out/
+*.tsbuildinfo
+
+# local data and secrets (never commit)
+.env
+.env.*
+!.env.example
+.data/
+storage/
+
+# logs and OS noise
+*.log
+.DS_Store
+Thumbs.db
+
+# local-only notes (test accounts)
+*.local.md
+
+# local backups and helper files
+_backups/
+Claude outputs/

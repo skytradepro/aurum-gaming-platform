@@ -1,0 +1,31 @@
+/* Hannibal Thunder Roulette: the Jewel Roulette table in a storm look (electric blue, lightning yellow). */
+.jr-thunder .jr-stage {
+  background: radial-gradient(ellipse at 50% 15%, #1e3a8a 0%, #172554 38%, #0b1026 72%, #04060f 100%), #04060f;
+  border-color: rgba(96, 165, 250, 0.6);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55), 0 0 60px rgba(250, 204, 21, 0.18);
+}
+.jr-thunder .jr-stage .cb-mult { background: rgba(4, 6, 15, 0.85); border-color: rgba(250, 204, 21, 0.75); }
+.jr-thunder .jr-stage .cb-mult small, .jr-thunder .jr-stage .cb-win small { color: #fde68a; }
+.jr-thunder .jr-stage .cb-tool { background: rgba(23, 37, 84, 0.9); border-color: #3b82f6; }
+.jr-thunder .jr-stage .cb-bar { background: rgba(4, 6, 15, 0.88); border-color: rgba(96, 165, 250, 0.4); }
+.jr-thunder .jr-stage .cb-info { background: rgba(4, 6, 15, 0.92); }
+.jr-thunder .jr-stage .cb-info-card { background: linear-gradient(145deg, #172554, #04060f); border-color: #3b82f6; }
+.jr-thunder .jr-stage .cb-info-card h3 { color: #fde68a; }
+.jr-thunder .cb-spin {
+  border-color: #fef9c3; color: #1a1206; text-shadow: none;
+  background: radial-gradient(circle at 50% 30%, #fef9c3, #facc15 45%, #b45309);
+  box-shadow: 0 8px 0 #713f12, 0 12px 24px rgba(250, 204, 21, 0.45);
+}
+.jr-thunder .jr-gems { color: #dbeafe; }
+.jr-thunder .jr-gems span { border-color: #fde047; box-shadow: 0 0 18px rgba(250, 204, 21, 0.7), 0 0 4px #fff; }
+.jr-thunder .jr-gems.is-flash { animation: jr-thunder-flash 0.9s ease-out; }
+.jr-thunder .jr-n.is-gem { box-shadow: 0 0 0 2px #facc15, 0 0 16px rgba(250, 204, 21, 0.85); }
+.jr-thunder .jr-n i { box-shadow: 0 0 10px rgba(250, 204, 21, 0.9); }
+@keyframes jr-thunder-flash {
+  0%, 100% { filter: none; }
+  10%, 30% { filter: brightness(2.2) drop-shadow(0 0 12px #fff); }
+  20% { filter: none; }
+}
+@media (prefers-reduced-motion: reduce) { .jr-thunder .jr-gems.is-flash { animation: none; } }
+/* lightning numbers on the wheel itself (the wheel draws them in the jewel colour) */
+.jr-thunder path[fill='#0891b2'] { fill: #ca8a04; stroke: #fde047; }

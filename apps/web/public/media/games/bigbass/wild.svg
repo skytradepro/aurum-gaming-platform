@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="45%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="34" width="112" height="60" rx="16" fill="url(#g)" stroke="#fff" stroke-width="4"/>
+  <rect x="16" y="42" width="96" height="44" rx="12" fill="none" stroke="#7c2d12" stroke-width="2" opacity=".45"/>
+  <text x="64" y="76" text-anchor="middle" font-family="Impact,Arial Black,sans-serif" font-size="28" fill="#fff" stroke="#7c2d12" stroke-width="2" paint-order="stroke fill" letter-spacing="1">WILD</text>
+</svg>

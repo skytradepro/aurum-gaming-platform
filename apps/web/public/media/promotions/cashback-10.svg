@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-label="Cashback 10 percent or 10 TND">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a0f28"/>
+      <stop offset="45%" stop-color="#2d1540"/>
+      <stop offset="100%" stop-color="#120a18"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f6d56b"/>
+      <stop offset="50%" stop-color="#ffb82a"/>
+      <stop offset="100%" stop-color="#e89b1e"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#ffb82a" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#ffb82a" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="680" fill="url(#bg)"/>
+  <circle cx="900" cy="120" r="220" fill="url(#glow)" filter="url(#soft)"/>
+  <circle cx="180" cy="580" r="180" fill="url(#glow)" opacity="0.6" filter="url(#soft)"/>
+  <path d="M0 520 Q300 420 600 480 T1200 440 L1200 680 L0 680 Z" fill="#000" opacity="0.25"/>
+  <text x="72" y="88" fill="#ffd66b" font-family="Impact,Arial Narrow,sans-serif" font-size="38" letter-spacing="6">HANNIBAL</text>
+  <text x="72" y="148" fill="#fff" font-family="Segoe UI,system-ui,sans-serif" font-size="28" font-weight="700" opacity="0.92">CASHBACK</text>
+  <text x="72" y="320" fill="url(#gold)" font-family="Impact,Arial Narrow,sans-serif" font-size="200" letter-spacing="-4">10%</text>
+  <text x="72" y="410" fill="#fff" font-family="Segoe UI,system-ui,sans-serif" font-size="42" font-weight="800">10 TND</text>
+  <text x="72" y="468" fill="#c9b8e0" font-family="Segoe UI,system-ui,sans-serif" font-size="26">Weekly casino losses " Cash at shop</text>
+  <text x="72" y="520" fill="#a78fd4" font-family="Segoe UI,system-ui,sans-serif" font-size="22" direction="rtl">'3*1/'/ FB/J a`j  a` /.*</text>
+  <rect x="72" y="560" width="220" height="56" rx="28" fill="url(#gold)"/>
+  <text x="182" y="598" text-anchor="middle" fill="#1a0f10" font-family="Segoe UI,sans-serif" font-size="22" font-weight="800">PLAY NOW</text>
+  <g opacity="0.15" stroke="#ffd66b" stroke-width="2" fill="none">
+    <circle cx="1020" cy="480" r="88"/>
+    <circle cx="1020" cy="480" r="58"/>
+    <text x="1020" y="498" text-anchor="middle" fill="#ffd66b" font-size="52" font-weight="800" stroke="none" opacity="1">$</text>
+  </g>
+</svg>

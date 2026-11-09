@@ -1,4 +1,5 @@
 import { Link, redirect } from '@/i18n/routing';
+import { AdminNav } from '@/components/admin/AdminNav';
 import { AdminSessionGuard } from '@/components/admin/AdminSessionGuard';
 import { Icon } from '@/components/Icon';
 import { serverApiFetch } from '@/lib/api-server';
@@ -46,8 +47,11 @@ export default async function AdminLayout({ children, params }: { children: Reac
 
   const tShop = await getTranslations('skyx');
 
+  const shellClass =
+    user.role === 'super_admin' ? 'admin-shell admin-shell--principal' : user.role === 'admin' ? 'admin-shell admin-shell--shop' : 'admin-shell';
+
   return (
-    <>
+    <div className={shellClass}>
       <AdminSessionGuard />
       {user.role === 'admin' ? (
         <h1 className="admin-shop-title">
@@ -62,19 +66,13 @@ export default async function AdminLayout({ children, params }: { children: Reac
       ) : (
         <h1>{t('title')}</h1>
       )}
-      <nav className="site-footer-nav admin-nav" style={{ marginBottom: '1rem' }}>
-        {links.map((l) => (
-          <Link key={l.href} href={l.href}>
-            {l.label}
-          </Link>
-        ))}
-      </nav>
+      <AdminNav links={links.map((l) => ({ href: l.href, label: l.label }))} />
       {!twoFactorOn ? (
         <Link href="/admin/security" className="alert alert-error twofa-banner">
           {t2('staffWarning')}
         </Link>
       ) : null}
       <div className="admin-area">{children}</div>
-    </>
+    </div>
   );
 }

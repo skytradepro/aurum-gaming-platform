@@ -451,7 +451,7 @@ export function StaffCredit({ staff, currencies }: { staff: StaffRow; currencies
             )}
           </div>
         ) : null}
-        <button type="submit" className={up ? 'btn btn-gold cd-go' : 'btn cd-go cd-go-out'} disabled={busy || minor === null || tooMuch}>
+        <button type="submit" className={up ? 'btn cd-go cd-go-in' : 'btn cd-go cd-go-out'} disabled={busy || minor === null || tooMuch}>
           {mode === 'recharge' ? t('doAdd') : mode === 'withdraw' ? t('doTake') : tc('doCorrection')}
         </button>
         <button type="button" className="cd-more" onClick={() => setMore((v) => !v)} aria-expanded={more}>

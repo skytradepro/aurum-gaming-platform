@@ -1,6 +1,6 @@
 import { LoginForm } from '@/components/LoginForm';
 import { redirect } from '@/i18n/routing';
-import { getSessionUser } from '@/lib/auth';
+import { getSessionUser, isCashier, isPlayer, isStaff } from '@/lib/auth';
 import { isLocale } from '@aurum/i18n';
 import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -10,7 +10,11 @@ export default async function LoginPage({ params }: { params: Promise<{ locale: 
   if (!isLocale(locale)) notFound();
   setRequestLocale(locale);
   const user = await getSessionUser();
-  if (user) return redirect({ href: '/account', locale });
+  if (user) {
+    if (isStaff(user)) return redirect({ href: '/skyx/enter', locale });
+    if (isCashier(user)) return redirect({ href: '/shop', locale });
+    if (isPlayer(user)) return redirect({ href: '/account', locale });
+  }
   return (
     <div className="auth-wrap">
       <div className="auth-card">

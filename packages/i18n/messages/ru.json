@@ -280,6 +280,7 @@
       "basic": "Basic"
     },
     "featuredGames": "Рекомендуемые игры",
+    "pragmaticPlayRail": "Pragmatic Play — новые слоты",
     "newGames": "Новые игры",
     "liveTables": "Live-казино",
     "promotionsTitle": "Акции",
@@ -377,8 +378,15 @@
     "table": "Настольные игры",
     "allGames": "Все игры",
     "providerCatalog": "Игры провайдеров (Pragmatic, Amatic, PG Soft, Amusnet)",
+    "pragmaticGuide": {
+      "title": "Как играть в слоты Pragmatic и партнёров",
+      "step1": "Войдите — баланс это кошелёк Hannibal в валюте аккаунта (напр. TND).",
+      "step2": "Выберите игру и дождитесь загрузки; ставки и выигрыши внутри игры — с реального кошелька.",
+      "step3": "На ПК можно включить полный экран; звук и спин — внутри игры."
+    },
     "demoGame": "Демо-игра",
     "catalogEmpty": "В каталоге пока нет игр.",
+    "catalogLoadFailed": "Не удалось загрузить игры. Убедитесь, что API запущен (npm run api:dev), и повторите.",
     "demoGameNote": "Это демо-заглушка, а не настоящая игра.",
     "noProviders": "Провайдеров пока нет.",
     "related": "Похожие игры",
@@ -419,6 +427,13 @@
     "channels": "Для live-каналов нужен лицензированный провайдер трансляций.",
     "needs": "Что нужно",
     "liveCasino": "Для столов live-казино нужен лицензированный провайдер живых дилеров. Раздел откроется после подключения провайдера."
+  },
+  "demoPlan": {
+    "title": "Where we add features (demo map)",
+    "subtitle": "Planning only — red arrows show what is new or planned on each screen.",
+    "home": "Home — Pragmatic rail",
+    "casino": "Casino — top rail + guide",
+    "admin": "Admin — player page"
   },
   "footer": {
     "aboutUs": "О нас",

@@ -280,6 +280,7 @@
       "basic": "Basic"
     },
     "featuredGames": "Jeux à la une",
+    "pragmaticPlayRail": "Pragmatic Play — nouvelles machines",
     "newGames": "Nouveaux jeux",
     "liveTables": "Casino en direct",
     "promotionsTitle": "Promotions",
@@ -377,8 +378,15 @@
     "table": "Jeux de table",
     "allGames": "Tous les jeux",
     "providerCatalog": "Jeux fournisseurs (Pragmatic, Amatic, PG Soft, Amusnet)",
+    "pragmaticGuide": {
+      "title": "Comment jouer aux slots Pragmatic et partenaires",
+      "step1": "Connectez-vous — le solde affiché est votre portefeuille Hannibal dans la devise du compte (ex. TND).",
+      "step2": "Choisissez un jeu et attendez le chargement ; les mises et gains à l’intérieur utilisent le vrai portefeuille.",
+      "step3": "Plein écran sur ordinateur si besoin ; le volume et le spin se règlent dans le jeu."
+    },
     "demoGame": "Jeu de démonstration",
     "catalogEmpty": "Aucun jeu n’est encore au catalogue.",
+    "catalogLoadFailed": "Impossible de charger les jeux. Vérifiez que l’API tourne (npm run api:dev), puis réessayez.",
     "demoGameNote": "Ceci est un exemple de démonstration, pas un vrai jeu.",
     "noProviders": "Aucun fournisseur de jeux pour l’instant.",
     "related": "Jeux similaires",
@@ -419,6 +427,13 @@
     "channels": "Les chaînes en direct nécessitent un fournisseur agréé de diffusion.",
     "needs": "Ce qu’il faut",
     "liveCasino": "Les tables de casino en direct nécessitent un fournisseur agréé de croupiers en direct. Elle ouvrira dès que le fournisseur sera connecté."
+  },
+  "demoPlan": {
+    "title": "Où on ajoute (plan démo)",
+    "subtitle": "Planification seulement — les flèches montrent le nouveau ou prévu.",
+    "home": "Accueil — rail Pragmatic",
+    "casino": "Casino — rail + guide",
+    "admin": "Admin — fiche joueur"
   },
   "footer": {
     "aboutUs": "À propos",
@@ -785,6 +800,15 @@
       "passwordReset": "Un mot de passe temporaire a été défini et toutes les sessions ont été fermées.",
       "mustChange": "Doit changer son mot de passe"
     },
+    "dashUpdatedAt": "Dernière mise à jour",
+    "dashQuickLinks": "Accès rapide",
+    "dashTotal": "Total",
+    "dashSports30d": "Paris sportifs (30 jours)",
+    "dashSports30dHint": "Mises et gains issus du grand livre — jamais mélangés entre devises.",
+    "dashShopScope": "Vue admin boutique — uniquement les joueurs de cet admin. Pas les totaux plateforme.",
+    "dashShopScopeHint": "Dépôts, retraits, sport et casino ci-dessous : joueurs créés par cet admin seulement.",
+    "adminShopTitle": "Admin boutique · {name}",
+    "colWallets": "Portefeuilles",
     "dash": {
       "players": "Joueurs",
       "playersNote": "{active} actifs · {suspended} suspendus · {fresh} nouveaux en 7 jours",
@@ -1637,6 +1661,7 @@
     "paid": "Payé",
     "adminTitle": "Paris",
     "count": "Paris",
+    "houseNet": "Maison (mises − payé)",
     "rulesTitle": "Paris sportifs",
     "enabled": "Paris sportifs ouverts",
     "maxStakeLabel": "Mise maximale (unités entières)",
@@ -2886,7 +2911,21 @@
     "balance": "Solde",
     "none": "Aucun joueur trouvé.",
     "open": "Ouvrir",
-    "owner": "Par l'admin"
+    "owner": "Par l'admin",
+    "sportsBets": "Paris sportifs (gain / perte)",
+    "sportsBetsHint": "Chaque ticket avec mise, cote, résultat du match et paiement.",
+    "playerNet": "Net joueur (payé − mise)",
+    "ledgerCasinoHint": "Casino, slots (Pragmatic) et jeux Hannibal : lignes du grand livre ci-dessous (mises, gains, dépôts).",
+    "colBet": "Pari",
+    "colWin": "Gain",
+    "colLoss": "Perte",
+    "colNet": "Net",
+    "slipDetails": "Tickets complets (matchs et cotes)",
+    "ledgerAll": "Tout",
+    "ledgerSports": "Sports",
+    "ledgerCasino": "Casino & jeux",
+    "ledgerDeposit": "Dépôts & bonus",
+    "ledgerFilterHint": "Filtrez le grand livre. Les paris sportifs ont la référence bet:… ; le casino utilise d’autres lignes."
   },
   "freeSpins": {
     "title": "{count} TOURS GRATUITS",

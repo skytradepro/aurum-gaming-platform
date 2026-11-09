@@ -3,6 +3,7 @@ import { CURRENCY_CODE } from './shared.ts';
 import { readQuery } from '../http/query.ts';
 import { access, created, ok } from '../http/types.ts';
 import type { Ctx, Route } from '../http/types.ts';
+import { adminBetsForPlayer } from '../services/bets.ts';
 import { listLedger, postStaffEntry } from '../services/balances.ts';
 import { dashboardSummary, ledgerHealth, listAudit } from '../services/reports.ts';
 import { getPlayer, listPlayers, resetPassword, updatePlayer } from '../services/users.ts';
@@ -77,6 +78,8 @@ const balanceSchema = v.object({
   idempotencyKey: IDEMPOTENCY_KEY,
 });
 
+const playerBetsQuery = v.object({ limit: v.withDefault(v.integer({ min: 1, max: 100, coerce: true }), 40) });
+
 const ledgerQuery = v.object({
   userId: v.optional(UUID),
   type: v.optional(v.choice(ENTRY_TYPES)),
@@ -97,13 +100,23 @@ const auditQuery = v.object({
   limit: v.optional(v.integer({ min: 1, max: 200, coerce: true })),
 });
 
+const dashboardQuery = v.object({
+  /** Super Admin only: stats for one shop admin’s players. */
+  ownerId: v.optional(UUID),
+});
+
 export const adminPlayerRoutes: Route[] = [
   {
     method: 'GET',
     path: '/v1/admin/dashboard',
     access: access.staff('reports.view'),
     async handler(ctx) {
-      return ok(await dashboardSummary(ctx.db, ctx.now));
+      const me = ctx.principal();
+      const q = readQuery(ctx, dashboardQuery);
+      let ownerId: string | undefined;
+      if (me.role === 'super_admin') ownerId = q.ownerId;
+      else if (me.role === 'admin') ownerId = me.id;
+      return ok(await dashboardSummary(ctx.db, ctx.now, ownerId));
     },
   },
   {
@@ -165,6 +178,17 @@ export const adminPlayerRoutes: Route[] = [
       const input = await ctx.json(balanceSchema);
       const result = await postStaffEntry(ctx, id, input);
       return result.replayed ? ok(result) : created(result);
+    },
+  },
+  {
+    method: 'GET',
+    path: '/v1/admin/players/:id/bets',
+    access: access.staff('reports.view'),
+    async handler(ctx) {
+      const q = readQuery(ctx, playerBetsQuery);
+      const id = await myPlayerId(ctx);
+      const me = ctx.principal();
+      return ok(await adminBetsForPlayer(ctx.db, { id: me.id, role: me.role }, id, q.limit));
     },
   },
   {

@@ -6,7 +6,7 @@ export interface PromoArt {
 }
 
 const ART: Record<string, PromoArt> = {
-  'cashback-10': { image: '/media/videos/slots-hall-desktop.jpg', badge: '10%', play: '/casino' },
+  'cashback-10': { image: '/media/promotions/cashback-10.svg', badge: '10% · 10 TND', play: '/casino' },
   'sport-bonus-100': { image: '/media/videos/football-stadium-desktop.jpg', badge: '100%', play: '/sports' },
   'weekly-sport-bonus': { image: '/media/videos/football-crowd-mobile.jpg', badge: '100%', play: '/sports' },
   'weekly-casino-bonus': { image: '/media/videos/roulette-spin-desktop.jpg', badge: '50%', play: '/casino' },

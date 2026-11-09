@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="600" viewBox="0 0 1920 600" role="img" aria-label="Cashback promotion banner">
+  <defs>
+    <linearGradient id="bgb" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#120a18"/>
+      <stop offset="40%" stop-color="#2a1248"/>
+      <stop offset="100%" stop-color="#1a0f28"/>
+    </linearGradient>
+    <linearGradient id="goldb" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f6d56b"/>
+      <stop offset="100%" stop-color="#e89b1e"/>
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="600" fill="url(#bgb)"/>
+  <ellipse cx="1550" cy="300" rx="420" ry="280" fill="#ffb82a" opacity="0.12"/>
+  <text x="120" y="120" fill="#ffd66b" font-family="Impact,sans-serif" font-size="48" letter-spacing="8">HANNIBAL</text>
+  <text x="120" y="200" fill="#fff" font-family="Segoe UI,sans-serif" font-size="44" font-weight="700">CASHBACK BONUS</text>
+  <text x="120" y="360" fill="url(#goldb)" font-family="Impact,sans-serif" font-size="180">10%</text>
+  <text x="120" y="430" fill="#fff" font-family="Segoe UI,sans-serif" font-size="48" font-weight="800">or 10 TND</text>
+  <text x="120" y="490" fill="#b8a5d6" font-family="Segoe UI,sans-serif" font-size="28">Every week on net casino losses · 18+</text>
+  <rect x="720" y="260" width="400" height="80" rx="40" fill="url(#goldb)"/>
+  <text x="920" y="312" text-anchor="middle" fill="#1a0f10" font-family="Segoe UI,sans-serif" font-size="32" font-weight="800">CLAIM AT SHOP</text>
+</svg>

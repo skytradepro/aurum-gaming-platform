@@ -257,7 +257,7 @@ export function ShopCounter({ balanceMinor, currency, decimals }: { balanceMinor
                   )}
                 </div>
               ) : null}
-              <button type="submit" className={mode === 'deposit' ? 'btn btn-gold cd-go' : 'btn cd-go cd-go-out'} disabled={busy || minor === null || shopTooLow || playerTooLow}>
+              <button type="submit" className={mode === 'deposit' ? 'btn cd-go cd-go-in' : 'btn cd-go cd-go-out'} disabled={busy || minor === null || shopTooLow || playerTooLow}>
                 {mode === 'deposit' ? t('doRecharge') : t('doCashOut')}
               </button>
             </form>

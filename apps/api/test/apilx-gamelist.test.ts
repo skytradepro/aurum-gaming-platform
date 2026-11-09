@@ -8,7 +8,7 @@ describe('API LX gamelist parse', () => {
       code: 0,
       data: [
         { gameid: 101, name: 'Sweet Bonanza', iconurl3: 'https://cdn.example/a.webp' },
-        { gameID: 202, name: 'Gates of Olympus' },
+        { gameID: 202, name: 'Gates of Olympus', iconurl1: 'http://bad.example/x.png', iconurl2: 'https://cdn.example/b.webp' },
       ],
     };
     const games = parseApilxGamelistResponse(json, 'pragmatic');
@@ -16,6 +16,7 @@ describe('API LX gamelist parse', () => {
     assert.equal(games[0]?.externalId, '101');
     assert.equal(games[0]?.image, 'https://cdn.example/a.webp');
     assert.equal(games[1]?.externalId, '202');
+    assert.equal(games[1]?.image, 'https://cdn.example/b.webp');
   });
 
   it('rejects non-zero provider codes', () => {

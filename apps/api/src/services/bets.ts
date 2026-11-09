@@ -483,6 +483,7 @@ export async function settleDueBets(db: Db, config: Config): Promise<{ matches: 
 
 export interface AdminBetDTO extends BetDTO {
   player: string;
+  playerId: string;
 }
 
 /** Bets for the back office: a Super Admin sees all of them, an admin only those of the players he owns. */
@@ -490,18 +491,54 @@ export async function adminBets(db: Queryable, viewer: { id: string; role: strin
   const scope = viewer.role === 'super_admin' ? '' : 'and u.owner_id = $3::uuid';
   const params: unknown[] = [status, limit];
   if (scope) params.push(viewer.id);
-  const { rows } = await db.query<BetRow & { username: string }>(
-    `select b.id::text, b.kind, b.status, b.currency, b.stake_minor::text, b.total_odds::text, b.potential_payout_minor::text, b.payout_minor::text, b.created_at, b.settled_at, u.username
+  const { rows } = await db.query<BetRow & { username: string; user_id: string }>(
+    `select b.id::text, b.kind, b.status, b.currency, b.stake_minor::text, b.total_odds::text, b.potential_payout_minor::text, b.payout_minor::text, b.created_at, b.settled_at, u.username, u.id::text as user_id
        from bets b join users u on u.id = b.user_id
       where ($1::text is null or b.status = $1) ${scope}
       order by b.id desc limit $2`,
     params,
   );
-  const items = (await withSelections(db, rows)).map((b, i) => ({ ...b, player: rows[i]!.username }));
+  const items = (await withSelections(db, rows)).map((b, i) => ({ ...b, player: rows[i]!.username, playerId: rows[i]!.user_id }));
   const totals = await db.query<{ currency: string; bets: string; staked: string; paid: string }>(
     `select b.currency, count(*)::text as bets, sum(b.stake_minor)::text as staked, sum(b.payout_minor)::text as paid
        from bets b join users u on u.id = b.user_id where true ${scope.replace('$3', '$1')} group by b.currency order by b.currency`,
     scope ? [viewer.id] : [],
   );
   return { items, totals: totals.rows.map((t) => ({ currency: t.currency, bets: Number(t.bets), staked: t.staked, paid: t.paid })) };
+}
+
+/** Sports bets for one player (admin player page). Respects owner scope like adminBets. */
+export async function adminBetsForPlayer(
+  db: Queryable,
+  viewer: { id: string; role: string },
+  userId: string,
+  limit: number,
+): Promise<{ items: AdminBetDTO[]; summary: { currency: string; bets: number; staked: string; paid: string; playerNetMinor: string } | null }> {
+  const scope = viewer.role === 'super_admin' ? '' : 'and u.owner_id = $3::uuid';
+  const params: unknown[] = [userId, limit];
+  if (scope) params.push(viewer.id);
+  const { rows } = await db.query<BetRow & { username: string; user_id: string }>(
+    `select b.id::text, b.kind, b.status, b.currency, b.stake_minor::text, b.total_odds::text, b.potential_payout_minor::text, b.payout_minor::text, b.created_at, b.settled_at, u.username, u.id::text as user_id
+       from bets b join users u on u.id = b.user_id
+      where b.user_id = $1::uuid ${scope}
+      order by b.id desc limit $2`,
+    params,
+  );
+  const items = (await withSelections(db, rows)).map((b, i) => ({ ...b, player: rows[i]!.username, playerId: rows[i]!.user_id }));
+  const sum = await db.query<{ currency: string; bets: string; staked: string; paid: string }>(
+    `select b.currency, count(*)::text as bets, coalesce(sum(b.stake_minor), 0)::text as staked, coalesce(sum(b.payout_minor), 0)::text as paid
+       from bets b join users u on u.id = b.user_id where b.user_id = $1::uuid ${scope.replace('$3', '$2')} group by b.currency`,
+    scope ? [userId, viewer.id] : [userId],
+  );
+  const row = sum.rows[0];
+  const summary = row
+    ? {
+        currency: row.currency,
+        bets: Number(row.bets),
+        staked: row.staked,
+        paid: row.paid,
+        playerNetMinor: (BigInt(row.paid) - BigInt(row.staked)).toString(),
+      }
+    : null;
+  return { items, summary };
 }

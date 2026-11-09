@@ -339,7 +339,7 @@ function ShopCard({ shop, decimals, canManage, canCash }: { shop: AdminShop; dec
               )}
             </div>
           ) : null}
-          <button type="submit" className={up ? 'btn btn-gold cd-go' : 'btn cd-go cd-go-out'} disabled={busy || minor === null || tooMuch}>
+          <button type="submit" className={up ? 'btn cd-go cd-go-in' : 'btn cd-go cd-go-out'} disabled={busy || minor === null || tooMuch}>
             {mode === 'recharge' ? t('doRecharge') : mode === 'withdraw' ? t('doTake') : tc('doCorrection')}
           </button>
           <button type="button" className="cd-more" onClick={() => setMore((v) => !v)} aria-expanded={more}>
@@ -359,21 +359,21 @@ function ShopCard({ shop, decimals, canManage, canCash }: { shop: AdminShop; dec
       ) : null}
 
       <div className="shop-actions">
-        <button type="button" className="btn btn-ghost btn-sm" onClick={() => void toggleHistory()}>
+        <button type="button" className="btn btn-sm admin-chip tone-ledger" onClick={() => void toggleHistory()}>
           {history ? t('hideHistory') : t('history')}
         </button>
         {canManage ? (
-          <button type="button" className="btn btn-ghost btn-sm" onClick={() => (workers ? setWorkers(null) : void loadWorkers())}>
+          <button type="button" className="btn btn-sm admin-chip tone-players" onClick={() => (workers ? setWorkers(null) : void loadWorkers())}>
             {t('logins')} ({shop.activeWorkers})
           </button>
         ) : null}
         {canManage && shop.status !== 'closed' ? (
           active ? (
-            <button type="button" className="btn btn-ghost btn-sm shop-stop" onClick={() => void shopStatus('suspended')}>
+            <button type="button" className="btn btn-sm admin-chip tone-danger" onClick={() => void shopStatus('suspended')}>
               {t('stop')}
             </button>
           ) : (
-            <button type="button" className="btn btn-gold btn-sm" onClick={() => void shopStatus('active')}>
+            <button type="button" className="btn btn-sm admin-chip tone-in" onClick={() => void shopStatus('active')}>
               {t('open')}
             </button>
           )

@@ -280,6 +280,7 @@
       "basic": "Basic"
     },
     "featuredGames": "Öne çıkan oyunlar",
+    "pragmaticPlayRail": "Pragmatic Play — yeni slotlar",
     "newGames": "Yeni oyunlar",
     "liveTables": "Canlı casino",
     "promotionsTitle": "Promosyonlar",
@@ -377,8 +378,15 @@
     "table": "Masa oyunları",
     "allGames": "Tüm oyunlar",
     "providerCatalog": "Sağlayıcı oyunları (Pragmatic, Amatic, PG Soft, Amusnet)",
+    "pragmaticGuide": {
+      "title": "Pragmatic ve sağlayıcı slotları nasıl oynanır",
+      "step1": "Giriş yapın — bakiye Hannibal cüzdanınızdır (ör. TND).",
+      "step2": "Oyunu seçin ve yüklenmesini bekleyin; bahis ve kazançlar gerçek cüzdandan.",
+      "step3": "Masaüstünde tam ekran kullanabilirsiniz; ses ve spin oyunun içinden."
+    },
     "demoGame": "Demo oyun",
     "catalogEmpty": "Katalogda henüz oyun yok.",
+    "catalogLoadFailed": "Oyunlar yüklenemedi. API çalışıyor mu kontrol edin (npm run api:dev), sonra tekrar deneyin.",
     "demoGameNote": "Bu bir demo yer tutucudur, gerçek bir oyun değildir.",
     "noProviders": "Henüz oyun sağlayıcısı yok.",
     "related": "Buna benzer oyunlar",
@@ -419,6 +427,13 @@
     "channels": "Canlı kanallar için lisanslı bir yayın sağlayıcısı gerekir.",
     "needs": "Gerekenler",
     "liveCasino": "Canlı casino masaları için lisanslı bir canlı krupiye sağlayıcısı gerekir. Sağlayıcı bağlanır bağlanmaz açılacak."
+  },
+  "demoPlan": {
+    "title": "Where we add features (demo map)",
+    "subtitle": "Planning only — red arrows show what is new or planned on each screen.",
+    "home": "Home — Pragmatic rail",
+    "casino": "Casino — top rail + guide",
+    "admin": "Admin — player page"
   },
   "footer": {
     "aboutUs": "Hakkımızda",

@@ -35,17 +35,19 @@ function buildQuery(tab: Tab, provider: string, q: string, offset: number): stri
 
 export function CasinoBrowser({
   initialTab = 'lobby',
+  initialProvider = '',
   initial,
   providers,
 }: {
   initialTab?: Tab;
+  initialProvider?: string;
   initial: Page;
   providers: Provider[];
 }) {
   const t = useTranslations('casino');
   const tc = useTranslations('common');
   const [tab, setTab] = useState<Tab>(initialTab);
-  const [provider, setProvider] = useState('');
+  const [provider, setProvider] = useState(initialProvider);
   const [q, setQ] = useState('');
   const [sort, setSort] = useState<Sort>('popular');
   const [items, setItems] = useState<GameItem[]>(initial.items);
@@ -54,6 +56,12 @@ export function CasinoBrowser({
   const [failed, setFailed] = useState(false);
   const first = useRef(true);
   const requestId = useRef(0);
+
+  useEffect(() => {
+    if (provider === initialProvider) return;
+    setProvider(initialProvider);
+    first.current = true;
+  }, [initialProvider, provider]);
 
   const load = useCallback(
     async (nextTab: Tab, nextProvider: string, nextQ: string, offset: number) => {
@@ -78,7 +86,7 @@ export function CasinoBrowser({
   // If SSR missed the API, load once on mount (common when web starts before api:dev).
   useEffect(() => {
     if (initial.total > 0 && initial.items.length > 0) return;
-    void load(initialTab, '', '', 0);
+    void load(initialTab, initialProvider, '', 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- mount catalogue recovery only
   }, []);
 
@@ -86,7 +94,7 @@ export function CasinoBrowser({
   useEffect(() => {
     if (first.current) {
       first.current = false;
-      if (tab === initialTab && !provider && !q && initial.total > 0) return;
+      if (tab === initialTab && provider === initialProvider && !q && initial.total > 0) return;
     }
     const timer = window.setTimeout(() => void load(tab, provider, q, 0), q ? 300 : 0);
     return () => window.clearTimeout(timer);
@@ -159,7 +167,7 @@ export function CasinoBrowser({
         </div>
       ) : shown.length === 0 ? (
         <div className="empty-state">
-          <p>{t('noGames')}</p>
+          <p>{failed ? t('catalogLoadFailed') : !q.trim() && !provider ? t('catalogEmpty') : t('noGames')}</p>
           {failed ? (
             <button type="button" className="btn btn-dark" onClick={() => void load(tab, provider, q, 0)}>
               {tc('retry')}

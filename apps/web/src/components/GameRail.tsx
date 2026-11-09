@@ -8,6 +8,8 @@ import { GameCard } from './GameCard';
 import { Icon } from './Icon';
 import type { IconName } from './Icon';
 
+const CATALOG_HASH = '#provider-catalog';
+
 export function GameRail({ title, icon, games, href }: { title: string; icon: IconName; games: GameItem[]; href: string }) {
   const t = useTranslations('common');
   const track = useRef<HTMLDivElement>(null);
@@ -28,7 +30,7 @@ export function GameRail({ title, icon, games, href }: { title: string; icon: Ic
           <Icon name={icon} />
           {title}
         </h2>
-        <Link href={href} className="section-link">
+        <Link href={href.includes('#') ? href : `${href}${CATALOG_HASH}`} className="section-link">
           {t('viewAll')}
         </Link>
       </div>

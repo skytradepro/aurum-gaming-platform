@@ -1,13 +1,14 @@
 /**
- * Applies the SQL migrations in db/migrations to the database in DATABASE_URL.
+ * Applies the SQL migrations in db/migrations to the database.
  *   npm run db:migrate
+ * Uses MIGRATE_DATABASE_URL when set (postgres superuser locally); otherwise DATABASE_URL.
  * Set DATABASE_SSL=true when the database requires TLS (managed PostgreSQL services usually do).
  */
 import { createDb, migrate, MIGRATIONS_DIR } from '../src/index.ts';
 
-const url = process.env.DATABASE_URL;
+const url = process.env.MIGRATE_DATABASE_URL ?? process.env.DATABASE_URL;
 if (!url) {
-  console.error('DATABASE_URL is not set. Copy .env.example to .env and fill it in.');
+  console.error('DATABASE_URL (or MIGRATE_DATABASE_URL) is not set. Copy .env.example to .env and fill it in.');
   process.exit(1);
 }
 

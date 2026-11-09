@@ -174,7 +174,7 @@ export function BalanceForm({ userId, username, currency, balanceMinor, decimals
         </div>
       ) : null}
 
-      <button type="submit" className={credit ? 'btn btn-gold cd-go' : 'btn cd-go cd-go-out'} disabled={busy || minor === null || tooMuch}>
+      <button type="submit" className={credit ? 'btn cd-go cd-go-in' : 'btn cd-go cd-go-out'} disabled={busy || minor === null || tooMuch}>
         {mode === 'deposit' ? t('doDeposit') : mode === 'withdrawal' ? t('doCashOut') : t('doCorrection')}
       </button>
 

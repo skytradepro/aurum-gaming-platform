@@ -16,9 +16,26 @@ const SECRET = (process.env.ADMIN_SECRET_PATH ?? '').trim().replace(/^\/+|\/+$/g
 const SECRET_OK = /^[a-z0-9-]{16,80}$/.test(SECRET);
 const COOKIE = 'hb_admin_gate';
 const API = (process.env.API_INTERNAL_URL ?? 'http://127.0.0.1:4000').replace(/\/$/, '');
+/** Local only: set ADMIN_LOCAL_OPEN=1 in apps/web/.env.local to open /admin without the secret cookie (production unchanged). */
+const LOCAL_ADMIN_OPEN = process.env.NODE_ENV === 'development' && process.env.ADMIN_LOCAL_OPEN === '1';
 const LOCALE_RE = `(?:${routing.locales.join('|')})`;
 const ADMIN_RE = new RegExp(`^/(?:(${LOCALE_RE})/)?admin(?:/|$)`);
 const SECRET_RE = SECRET_OK ? new RegExp(`^/(?:(${LOCALE_RE})/)?${SECRET}/?$`) : null;
+
+async function staffSession(req: NextRequest): Promise<boolean> {
+  try {
+    const res = await fetch(`${API}/v1/auth/me`, {
+      headers: { cookie: req.headers.get('cookie') ?? '', accept: 'application/json' },
+      cache: 'no-store',
+    });
+    if (!res.ok) return false;
+    const body = (await res.json()) as { data?: { user?: { role?: string } }; user?: { role?: string } };
+    const role = body.data?.user?.role ?? body.user?.role;
+    return role === 'admin' || role === 'super_admin';
+  } catch {
+    return false;
+  }
+}
 
 let cached: { enabled: boolean; at: number } | null = null;
 async function gateEnabled(): Promise<boolean> {
@@ -28,8 +45,9 @@ async function gateEnabled(): Promise<boolean> {
     const body = (await res.json()) as { data?: { enabled?: boolean } };
     cached = { enabled: body.data?.enabled === true, at: Date.now() };
   } catch {
-    // API unreachable: keep the admin panel closed rather than open.
-    cached = { enabled: true, at: Date.now() };
+    // Prod: fail closed. Local dev: do not block /admin when the API is temporarily down.
+    const enabled = process.env.NODE_ENV === 'production';
+    cached = { enabled, at: Date.now() };
   }
   return cached.enabled;
 }
@@ -52,8 +70,11 @@ export default async function middleware(req: NextRequest) {
       return res;
     }
     const a = ADMIN_RE.exec(pathname);
-    if (a && req.cookies.get(COOKIE)?.value !== SECRET && (await gateEnabled())) {
+    if (a && req.cookies.get(COOKIE)?.value !== SECRET && (await gateEnabled()) && !LOCAL_ADMIN_OPEN) {
       const locale = a[1] ?? routing.defaultLocale;
+      if (await staffSession(req)) {
+        return NextResponse.redirect(absoluteUrl(req, `/${locale}/skyx/enter`));
+      }
       // Show the site's normal "page not found" screen instead of the admin panel.
       const target = absoluteUrl(req, `/${locale}/page-not-found`);
       const viaIntl = intl(new NextRequest(target, req));

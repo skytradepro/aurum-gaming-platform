@@ -3,7 +3,8 @@
 import { Link, usePathname } from '@/i18n/routing';
 import type { Locale } from '@aurum/i18n';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { apiClient } from '@/lib/api';
 import { findCurrency, formatAmountMinor } from '@/lib/money-display';
 import { convertForDisplay } from '@/lib/rates';
 import type { PublicRate } from '@/lib/rates';
@@ -50,8 +51,30 @@ export function SiteHeader({
   const ts = useTranslations('staffCredit');
   const pathname = usePathname();
   const [drawer, setDrawer] = useState(false);
+  const [liveWallet, setLiveWallet] = useState<MeUser['wallet'] | null>(null);
+  const providerPlay = pathname.includes('/casino/play/');
 
   useEffect(() => setDrawer(false), [pathname]);
+
+  /** While a provider game is open, poll wallet so win/loss shows in the header within ~2–3s. */
+  useEffect(() => {
+    setLiveWallet(null);
+    if (!providerPlay || user?.role !== 'user') return;
+    let alive = true;
+    const load = () => {
+      void apiClient<{ user: MeUser }>('/auth/me', { locale })
+        .then((r) => {
+          if (alive && r.user.wallet) setLiveWallet(r.user.wallet);
+        })
+        .catch(() => {});
+    };
+    load();
+    const id = window.setInterval(load, 2_500);
+    return () => {
+      alive = false;
+      window.clearInterval(id);
+    };
+  }, [providerPlay, locale, user?.role, pathname]);
   useEffect(() => {
     document.body.style.overflow = drawer ? 'hidden' : '';
     return () => {
@@ -65,17 +88,17 @@ export function SiteHeader({
       : user?.role === 'cashier'
         ? '/shop'
         : null;
-  const walletCur = user?.wallet ? findCurrency(config?.currencies ?? [], user.wallet.balance.currency) : undefined;
-  const showCur = findCurrency(config?.currencies ?? [], displayCurrency);
-  const convertedMinor = user?.wallet && walletCur && showCur ? convertForDisplay(user.wallet.balance.amountMinor, walletCur, showCur, rates) : null;
-  const balanceText =
-    user?.role === 'user' && user.wallet
-      ? convertedMinor && showCur
-        ? `≈ ${formatAmountMinor(convertedMinor, showCur, locale, 'full')}`
-        : walletCur
-          ? formatAmountMinor(user.wallet.balance.amountMinor, walletCur, locale, 'full')
-          : `${user.wallet.balance.amountMinor} ${user.wallet.balance.currency}`
-      : null;
+  const walletForDisplay = liveWallet ?? user?.wallet ?? null;
+  const balanceText = useMemo(() => {
+    if (user?.role !== 'user' || !walletForDisplay) return null;
+    const walletCur = findCurrency(config?.currencies ?? [], walletForDisplay.balance.currency);
+    const showCur = findCurrency(config?.currencies ?? [], displayCurrency);
+    const convertedMinor =
+      walletCur && showCur ? convertForDisplay(walletForDisplay.balance.amountMinor, walletCur, showCur, rates) : null;
+    if (convertedMinor && showCur) return `≈ ${formatAmountMinor(convertedMinor, showCur, locale, 'full')}`;
+    if (walletCur) return formatAmountMinor(walletForDisplay.balance.amountMinor, walletCur, locale, 'full');
+    return `${walletForDisplay.balance.amountMinor} ${walletForDisplay.balance.currency}`;
+  }, [user?.role, walletForDisplay, config?.currencies, displayCurrency, rates, locale]);
   const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
 
   return (
@@ -110,7 +133,7 @@ export function SiteHeader({
               </Link>
             ) : null}
             {staffCredit ? (
-              <Link href="/admin/players" className={staffCredit.empty ? 'balance-chip staff-chip is-empty' : 'balance-chip staff-chip'} title={ts('mine')}>
+              <Link href="/skyx/enter" className={staffCredit.empty ? 'balance-chip staff-chip is-empty' : 'balance-chip staff-chip'} title={ts('mine')}>
                 <Icon name="shop" />
                 <span dir="ltr">{staffCredit.text}</span>
               </Link>

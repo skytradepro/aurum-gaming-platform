@@ -64,7 +64,7 @@ export function OriginalsGrid({ games }: { games: OriginalGame[] }) {
   );
 }
 
-export function OriginalsLobby({ games }: { games: OriginalGame[] }) {
+export function OriginalsLobby({ games, hideSearch }: { games: OriginalGame[]; hideSearch?: boolean }) {
   const t = useTranslations('games');
   const [tab, setTab] = useState<Tab>('all');
   const [q, setQ] = useState('');
@@ -89,12 +89,18 @@ export function OriginalsLobby({ games }: { games: OriginalGame[] }) {
           </button>
         ))}
       </div>
-      <div className="casino-toolbar">
-        <div className="search-box">
-          <input className="input" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('searchGames')} aria-label={t('searchGames')} />
+      {hideSearch ? (
+        <p className="muted" style={{ margin: '0 0 0.75rem' }}>
+          {t('gamesCount', { count: shown.length })}
+        </p>
+      ) : (
+        <div className="casino-toolbar">
+          <div className="search-box">
+            <input className="input" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('searchGames')} aria-label={t('searchGames')} />
+          </div>
+          <span style={{ color: 'var(--text-muted)' }}>{t('gamesCount', { count: shown.length })}</span>
         </div>
-        <span style={{ color: 'var(--text-muted)' }}>{t('gamesCount', { count: shown.length })}</span>
-      </div>
+      )}
       {shown.length === 0 ? (
         <div className="empty-state">{t('noGames')}</div>
       ) : (

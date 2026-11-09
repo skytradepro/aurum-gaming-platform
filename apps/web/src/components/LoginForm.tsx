@@ -5,12 +5,13 @@ import { errorMessageKey } from '@aurum/i18n';
 import { ApiError, apiClient } from '@/lib/api';
 import type { MeUser } from '@/lib/types';
 import { TwoFactorLoginStep } from './TwoFactorLoginStep';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 export function LoginForm() {
   const t = useTranslations('auth.login');
   const tRoot = useTranslations();
+  const locale = useLocale();
   const router = useRouter();
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
@@ -19,10 +20,22 @@ export function LoginForm() {
   const [ticket, setTicket] = useState<string | null>(null);
 
   function go(user: MeUser) {
-    if (user.mustChangePassword) router.push('/change-password');
-    else if (user.role === 'cashier') router.push('/shop');
-    else if (user.role === 'admin' || user.role === 'super_admin') router.push('/admin');
-    else router.push('/account');
+    if (user.mustChangePassword) {
+      router.push('/change-password');
+      router.refresh();
+      return;
+    }
+    if (user.role === 'cashier') {
+      router.push('/shop');
+      router.refresh();
+      return;
+    }
+    if (user.role === 'admin' || user.role === 'super_admin') {
+      // Server route sets the secret admin-gate cookie, then opens /admin.
+      window.location.assign(`/${locale}/skyx/enter`);
+      return;
+    }
+    router.push('/account');
     router.refresh();
   }
 

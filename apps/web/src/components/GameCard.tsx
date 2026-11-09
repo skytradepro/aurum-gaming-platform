@@ -3,6 +3,7 @@
 import type { GameItem } from '@/lib/types';
 import { useRouter } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
+import { useEffect } from 'react';
 import { GameArt } from './GameArt';
 import { Icon } from './Icon';
 
@@ -13,6 +14,10 @@ export function GameCard({ game, index = 0 }: { game: GameItem; index?: number }
   const router = useRouter();
   const provider = game.art.source === 'aggregator';
   const playPath = `/casino/play/${game.slug}`;
+
+  useEffect(() => {
+    if (provider && index < 10) router.prefetch(playPath);
+  }, [index, playPath, provider, router]);
 
   return (
     <button

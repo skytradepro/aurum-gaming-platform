@@ -29,9 +29,11 @@ export default async function AdminBetsPage({ params }: { params: Promise<{ loca
         {data.totals.map((x) => {
           const cur = findCurrency(config.currencies, x.currency);
           const fmt = (m: string) => (cur ? formatAmountMinor(m, cur, locale) : `${m} ${x.currency}`);
+          const houseMinor = (BigInt(x.staked) - BigInt(x.paid)).toString();
           return (
             <p key={x.currency} className="card">
-              <strong>{x.currency}</strong> · {t('count')}: {x.bets} · {t('stake')}: {fmt(x.staked)} · {t('paid')}: {fmt(x.paid)}
+              <strong>{x.currency}</strong> · {t('count')}: {x.bets} · {t('stake')}: {fmt(x.staked)} · {t('paid')}: {fmt(x.paid)} · {t('houseNet')}:{' '}
+              <strong dir="ltr">{fmt(houseMinor)}</strong>
             </p>
           );
         })}

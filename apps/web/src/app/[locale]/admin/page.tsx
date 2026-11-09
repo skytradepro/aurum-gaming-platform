@@ -1,6 +1,8 @@
+import { AdminDashboard } from '@/components/admin/AdminDashboard';
 import { serverApiFetch } from '@/lib/api-server';
-import type { DashboardSummary } from '@/lib/types';
-import { isLocale } from '@aurum/i18n';
+import { getSessionUser } from '@/lib/auth';
+import type { DashboardSummary, PublicConfig } from '@/lib/types';
+import { isLocale, type Locale } from '@aurum/i18n';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 
@@ -9,6 +11,9 @@ export default async function AdminDashboardPage({ params }: { params: Promise<{
   if (!isLocale(locale)) notFound();
   setRequestLocale(locale);
   const t = await getTranslations('admin');
+  const user = await getSessionUser();
+  if (!user) notFound();
+
   let dash: DashboardSummary | null = null;
   try {
     dash = await serverApiFetch<DashboardSummary>('/admin/dashboard', { locale });
@@ -16,46 +21,27 @@ export default async function AdminDashboardPage({ params }: { params: Promise<{
     dash = null;
   }
 
-  if (!dash) return <p>{t('noAccess')}</p>;
+  if (!dash) {
+    return <p className="muted">{t('dash.noReports')}</p>;
+  }
+
+  let currencies = [] as PublicConfig['currencies'];
+  try {
+    currencies = (await serverApiFetch<PublicConfig>('/public/config', { locale })).currencies;
+  } catch {
+    currencies = [];
+  }
+
+  const scopedToShop = user.role === 'admin';
 
   return (
-    <div style={{ display: 'grid', gap: '1rem' }}>
-      <div className="card">
-        <h2>{t('dashboard')}</h2>
-        <p>
-          {t('totalPlayers')}: {dash.players.total} ({t('newLast7Days')}: {dash.players.newLast7Days})
-        </p>
-      </div>
-      <div className="card">
-        <h3>{t('balancesByCurrency')}</h3>
-        <ul>
-          {dash.balances.map((b) => (
-            <li key={b.currency}>
-              {b.currency}: {b.wallets} wallets — {b.total.amountMinor} minor units
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="card">
-        <h3>{t('shopCashByCurrency')}</h3>
-        <ul>
-          {dash.shopCash.map((s) => (
-            <li key={s.currency}>
-              {s.currency}: {s.activeShops}/{s.shops} shops — {s.total.amountMinor}
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="card">
-        <h3>{t('pendingByCurrency')}</h3>
-        <ul>
-          {dash.pendingWithdrawals.map((p) => (
-            <li key={p.currency}>
-              {p.currency}: {p.count} — {p.total.amountMinor}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
+    <AdminDashboard
+      dash={dash}
+      currencies={currencies}
+      locale={locale as Locale}
+      username={user.username}
+      isSuper={user.role === 'super_admin'}
+      scopedToShop={scopedToShop}
+    />
   );
 }

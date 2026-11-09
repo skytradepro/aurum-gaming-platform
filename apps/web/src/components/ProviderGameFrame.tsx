@@ -3,7 +3,7 @@
 import '@/styles/games-fx.css';
 import { errorMessageKey, type Locale } from '@aurum/i18n';
 import { ApiError, apiClient } from '@/lib/api';
-import { Link, useRouter } from '@/i18n/routing';
+import { Link } from '@/i18n/routing';
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 
@@ -24,7 +24,6 @@ export function ProviderGameFrame({
   const t = useTranslations('casino');
   const tRoot = useTranslations();
   const locale = useLocale() as Locale;
-  const router = useRouter();
   const [url, setUrl] = useState<string | null>(initialLaunchUrl);
   const [iframeUrl, setIframeUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -77,21 +76,6 @@ export function ProviderGameFrame({
       window.clearTimeout(timer);
     };
   }, [url]);
-
-  /** Header balance is server-rendered; refresh while the provider game may change the wallet. */
-  useEffect(() => {
-    const refresh = () => {
-      if (document.visibilityState === 'visible') router.refresh();
-    };
-    const id = window.setInterval(refresh, 12_000);
-    window.addEventListener('focus', refresh);
-    document.addEventListener('visibilitychange', refresh);
-    return () => {
-      window.clearInterval(id);
-      window.removeEventListener('focus', refresh);
-      document.removeEventListener('visibilitychange', refresh);
-    };
-  }, [router]);
 
   useEffect(() => {
     if (initialLaunchUrl) return;

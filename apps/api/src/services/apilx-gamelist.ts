@@ -77,9 +77,27 @@ function parseRemoteGameRow(raw: unknown): ApilxRemoteGame | null {
   const nameRaw = r.gamename ?? r.gameName ?? r.name ?? r.title ?? r.GameName;
   const name = typeof nameRaw === 'string' ? nameRaw.trim() : '';
   if (name.length < 2) return null;
-  const imgRaw =
-    r.iconurl3 ?? r.iconUrl3 ?? r.iconurl ?? r.iconUrl ?? r.image ?? r.img ?? r.thumbnail ?? r.icon ?? r.vertical;
-  let image: string | null = null;
-  if (typeof imgRaw === 'string' && /^https:\/\//.test(imgRaw.trim())) image = imgRaw.trim();
+  const image = firstHttpsIcon(
+    r.iconurl3,
+    r.iconUrl3,
+    r.iconurl2,
+    r.iconUrl2,
+    r.iconurl1,
+    r.iconUrl1,
+    r.iconurl,
+    r.iconUrl,
+    r.image,
+    r.img,
+    r.thumbnail,
+    r.icon,
+    r.vertical,
+  );
   return { externalId, name, image };
+}
+
+function firstHttpsIcon(...candidates: unknown[]): string | null {
+  for (const c of candidates) {
+    if (typeof c === 'string' && /^https:\/\//.test(c.trim())) return c.trim();
+  }
+  return null;
 }

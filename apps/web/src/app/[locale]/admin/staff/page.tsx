@@ -5,7 +5,9 @@ import type { StaffRow } from '@/components/admin/StaffManager';
 import { apiFetch } from '@/lib/api';
 import { serverApiFetch } from '@/lib/api-server';
 import { getSessionUser } from '@/lib/auth';
-import type { PublicConfig } from '@/lib/types';
+import type { DashboardSummary, PublicConfig } from '@/lib/types';
+import { AdminDashboard } from '@/components/admin/AdminDashboard';
+import type { Locale } from '@aurum/i18n';
 import { isLocale } from '@aurum/i18n';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -30,11 +32,26 @@ export default async function AdminStaffPage({ params, searchParams }: { params:
   const adminId = ((await searchParams).admin ?? '').trim();
   if (adminId && UUID.test(adminId)) {
     try {
-      const [{ staff }, { items }] = await Promise.all([
+      const [{ staff }, { items }, dash] = await Promise.all([
         serverApiFetch<{ staff: StaffRow }>(`/admin/staff/${adminId}`, { locale }),
         serverApiFetch<{ items: StaffPlayer[] }>(`/admin/players?ownerId=${adminId}&limit=100`, { locale }),
+        serverApiFetch<DashboardSummary>(`/admin/dashboard?ownerId=${adminId}`, { locale }).catch(() => null),
       ]);
-      return <StaffDetail key={staff.id} staff={staff} players={items} currencies={currencies} />;
+      const configCurrencies = (await serverApiFetch<PublicConfig>('/public/config', { locale }).catch(() => null))?.currencies ?? [];
+      return (
+        <StaffDetail key={staff.id} staff={staff} players={items} currencies={currencies}>
+          {dash ? (
+            <AdminDashboard
+              dash={dash}
+              currencies={configCurrencies}
+              locale={locale as Locale}
+              username={staff.username}
+              isSuper={false}
+              scopedToShop
+            />
+          ) : null}
+        </StaffDetail>
+      );
     } catch {
       // unknown or deleted admin: show the list
     }

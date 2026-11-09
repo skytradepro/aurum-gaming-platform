@@ -21,30 +21,71 @@ export interface DashboardDTO {
   generatedAt: string;
 }
 
-export async function dashboardSummary(q: Queryable, now: Date): Promise<DashboardDTO> {
+/** `ownerId`: shop admin — only their players' money and activity. Super Admin without ownerId = whole platform. */
+export async function dashboardSummary(q: Queryable, now: Date, ownerId?: string): Promise<DashboardDTO> {
   const since7 = new Date(now.getTime() - 7 * 86_400_000).toISOString();
   const since30 = new Date(now.getTime() - 30 * 86_400_000).toISOString();
-  const status = await q.query<{ status: UserStatus; n: string }>("select status::text, count(*)::text as n from users where role = 'user' group by status");
-  const fresh = await q.query<{ n: string }>("select count(*)::text as n from users where role = 'user' and created_at >= $1::timestamptz", [since7]);
+  const scoped = Boolean(ownerId);
+  const ownerJoin = scoped ? ' and u.owner_id = $1::uuid' : '';
+  const ownerParams = scoped ? [ownerId] : [];
+
+  const status = await q.query<{ status: UserStatus; n: string }>(
+    `select u.status::text as status, count(*)::text as n from users u where u.role = 'user'${ownerJoin} group by u.status`,
+    ownerParams,
+  );
+  const fresh = await q.query<{ n: string }>(
+    scoped
+      ? `select count(*)::text as n from users u where u.role = 'user' and u.created_at >= $2::timestamptz${ownerJoin}`
+      : `select count(*)::text as n from users u where u.role = 'user' and u.created_at >= $1::timestamptz`,
+    scoped ? [ownerId, since7] : [since7],
+  );
   const byStatus: Record<UserStatus, number> = { active: 0, suspended: 0, closed: 0 };
   for (const row of status.rows) byStatus[row.status] = Number(row.n);
-  const totals = await totalsByCurrency(q);
+
+  const balances = scoped
+    ? await q.query<{ currency: string; wallets: string; total: string }>(
+        `select w.currency, count(*)::text as wallets, coalesce(sum(w.balance_minor), 0)::text as total
+           from wallets w join users u on u.id = w.user_id
+          where w.kind = 'main' and u.role = 'user'${ownerJoin}
+          group by w.currency order by w.currency`,
+        ownerParams,
+      )
+    : null;
+  const totals = balances
+    ? balances.rows.map((r) => ({ currency: r.currency, wallets: Number(r.wallets), totalMinor: BigInt(r.total) }))
+    : await totalsByCurrency(q);
+
   const activity = await q.query<{ currency: string; entry_type: EntryType; entries: string; credited: string; debited: string }>(
-    `select currency, entry_type, count(*)::text as entries,
-            coalesce(sum(amount_minor) filter (where direction = 1), 0)::text as credited,
-            coalesce(sum(amount_minor) filter (where direction = -1), 0)::text as debited
-       from ledger_entries where created_at >= $1::timestamptz
-      group by currency, entry_type order by currency, entry_type`,
-    [since30],
+    scoped
+      ? `select e.currency, e.entry_type, count(*)::text as entries,
+              coalesce(sum(e.amount_minor) filter (where e.direction = 1), 0)::text as credited,
+              coalesce(sum(e.amount_minor) filter (where e.direction = -1), 0)::text as debited
+           from ledger_entries e join users u on u.id = e.user_id
+          where e.created_at >= $2::timestamptz and u.role = 'user'${ownerJoin}
+          group by e.currency, e.entry_type order by e.currency, e.entry_type`
+      : `select currency, entry_type, count(*)::text as entries,
+              coalesce(sum(amount_minor) filter (where direction = 1), 0)::text as credited,
+              coalesce(sum(amount_minor) filter (where direction = -1), 0)::text as debited
+           from ledger_entries where created_at >= $1::timestamptz
+          group by currency, entry_type order by currency, entry_type`,
+    scoped ? [ownerId, since30] : [since30],
   );
   const pending = await q.query<{ currency: string; n: string; total: string }>(
-    "select currency, count(*)::text as n, coalesce(sum(amount_minor), 0)::text as total from withdrawal_requests where status = 'pending' group by currency order by currency",
+    scoped
+      ? `select wr.currency, count(*)::text as n, coalesce(sum(wr.amount_minor), 0)::text as total
+           from withdrawal_requests wr join users u on u.id = wr.user_id
+          where wr.status = 'pending' and u.role = 'user'${ownerJoin}
+          group by wr.currency order by wr.currency`
+      : `select currency, count(*)::text as n, coalesce(sum(amount_minor), 0)::text as total from withdrawal_requests where status = 'pending' group by currency order by currency`,
+    ownerParams,
   );
-  const shopCash = await q.query<{ currency: string; n: string; active: string; total: string }>(
-    `select currency, count(*)::text as n, count(*) filter (where status = 'active')::text as active,
-            coalesce(sum(cash_balance_minor), 0)::text as total
-       from shops where status <> 'closed' group by currency order by currency`,
-  );
+  const shopCash = scoped
+    ? { rows: [] as { currency: string; n: string; active: string; total: string }[] }
+    : await q.query<{ currency: string; n: string; active: string; total: string }>(
+        `select currency, count(*)::text as n, count(*) filter (where status = 'active')::text as active,
+                coalesce(sum(cash_balance_minor), 0)::text as total
+           from shops where status <> 'closed' group by currency order by currency`,
+      );
   return {
     players: { total: byStatus.active + byStatus.suspended + byStatus.closed, byStatus, newLast7Days: Number(fresh.rows[0]?.n ?? '0') },
     pendingWithdrawals: pending.rows.map((r) => ({ currency: r.currency, count: Number(r.n), total: money(r.total, r.currency) })),

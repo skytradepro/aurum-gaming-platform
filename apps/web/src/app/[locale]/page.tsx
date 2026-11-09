@@ -46,7 +46,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const config = await safe(apiFetch<PublicConfig>('/public/config', { locale }), null);
   const currency = await getDisplayCurrency(config?.currencies ?? []);
 
-  const [banners, featured, live, everything, promos, winners, jackpots, football, popular, promoSlides] = await Promise.all([
+  const [banners, featured, live, everything, promos, winners, jackpots, football, popular, promoSlides, pragmatic] = await Promise.all([
     safe(apiFetch<{ items: PublicBanner[] }>(`/public/banners?placement=home_hero&locale=${locale}`, { locale }), { items: [] }),
     safe(apiFetch<{ items: GameItem[] }>('/public/games?featured=true&limit=16', { locale }), { items: [] }),
     safe(apiFetch<{ items: GameItem[] }>('/public/games?category=live&limit=16', { locale }), { items: [] }),
@@ -60,6 +60,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     safe(apiFetch<{ items: { game: string; rounds: number }[] }>('/public/popular-games', { locale }), { items: [] }),
     // promotions slider in the middle of the page (Admin > Banners > "Home page - promotions slider")
     safe(apiFetch<{ items: PublicBanner[] }>(`/public/banners?placement=home_promo&locale=${locale}`, { locale }), { items: [] }),
+    safe(apiFetch<{ items: GameItem[] }>('/public/games?provider=pragmatic-play&limit=16&sort=newest', { locale }), { items: [] }),
   ]);
 
   const newGames = everything.items.filter((g) => g.isNew).slice(0, 16);
@@ -102,6 +103,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         />
       ) : null}
       {config?.demo ? <p className="demo-flag">{tc('demoData')}</p> : null}
+
+      {pragmatic.items.length > 0 ? (
+        <GameRail title={t('pragmaticPlayRail')} icon="casino" games={pragmatic.items} href="/casino?provider=pragmatic-play" />
+      ) : null}
 
       <div className="section-head">
         <h2 className="section-title">

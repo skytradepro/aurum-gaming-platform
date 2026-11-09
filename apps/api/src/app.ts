@@ -67,10 +67,23 @@ function pickRequestId(req: IncomingMessage): string {
   return typeof incoming === 'string' && /^[A-Za-z0-9-]{8,64}$/.test(incoming) ? incoming : randomUUID();
 }
 
+function webOriginAllowed(origin: string, config: Config): boolean {
+  if (config.webOrigins.includes(origin)) return true;
+  if (config.env === 'development' || config.env === 'test') {
+    try {
+      const { hostname, protocol } = new URL(origin);
+      return (hostname === 'localhost' || hostname === '127.0.0.1') && (protocol === 'http:' || protocol === 'https:');
+    } catch {
+      return false;
+    }
+  }
+  return false;
+}
+
 function checkCsrf(req: IncomingMessage, method: Method, config: Config, hasSessionCookie: boolean): void {
   if (method === 'GET') return;
   const origin = req.headers.origin;
-  if (origin !== undefined && !config.webOrigins.includes(origin)) throw new AppError('csrf', { message: `origin ${origin} not allowed` });
+  if (origin !== undefined && !webOriginAllowed(origin, config)) throw new AppError('csrf', { message: `origin ${origin} not allowed` });
   const fetchSite = req.headers['sec-fetch-site'];
   if (typeof fetchSite === 'string' && !['same-origin', 'same-site', 'none'].includes(fetchSite)) {
     throw new AppError('csrf', { message: `sec-fetch-site ${fetchSite}` });

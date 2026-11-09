@@ -280,6 +280,7 @@
       "basic": "Basic"
     },
     "featuredGames": "Featured games",
+    "pragmaticPlayRail": "Pragmatic Play — new slots",
     "newGames": "New games",
     "liveTables": "Live casino",
     "promotionsTitle": "Promotions",
@@ -377,8 +378,15 @@
     "table": "Table games",
     "allGames": "All games",
     "providerCatalog": "Provider games (Pragmatic, Amatic, PG Soft, Amusnet)",
+    "pragmaticGuide": {
+      "title": "How to play Pragmatic & provider slots",
+      "step1": "Sign in — your balance is the Hannibal wallet in your account currency (e.g. TND).",
+      "step2": "Choose a game and wait for it to load; taps inside the game use the real wallet (bets and wins).",
+      "step3": "Use Full screen on desktop if you want; volume and spin are controlled inside the game."
+    },
     "demoGame": "Demo game",
     "catalogEmpty": "No games are in the catalogue yet.",
+    "catalogLoadFailed": "Could not load games. Check that the API is running (npm run api:dev), then try again.",
     "demoGameNote": "This is a demo placeholder, not a real game.",
     "noProviders": "No game providers yet.",
     "related": "More games like this",
@@ -419,6 +427,13 @@
     "channels": "Live channels need a licensed streaming provider.",
     "needs": "What is needed",
     "liveCasino": "Live casino tables need a licensed live dealer provider. It will open as soon as the provider is connected."
+  },
+  "demoPlan": {
+    "title": "Where we add features (demo map)",
+    "subtitle": "Planning only — red arrows show what is new or planned on each screen.",
+    "home": "Home — Pragmatic rail",
+    "casino": "Casino — top rail + guide",
+    "admin": "Admin — player page"
   },
   "footer": {
     "aboutUs": "About us",
@@ -785,6 +800,15 @@
       "passwordReset": "A temporary password was set and all sessions were signed out.",
       "mustChange": "Must change password"
     },
+    "dashUpdatedAt": "Last updated",
+    "dashQuickLinks": "Quick access",
+    "dashTotal": "Total",
+    "dashSports30d": "Sportsbook (30 days)",
+    "dashSports30dHint": "Stake and winnings from the ledger — never mixed across currencies.",
+    "dashShopScope": "Shop admin view — only this admin’s players. Platform totals are not shown here.",
+    "dashShopScopeHint": "Deposits, withdrawals, sports and casino lines below are for players created under this admin only.",
+    "adminShopTitle": "Shop admin · {name}",
+    "colWallets": "Wallets",
     "dash": {
       "players": "Players",
       "playersNote": "{active} active · {suspended} suspended · {fresh} new in 7 days",
@@ -1637,6 +1661,7 @@
     "paid": "Paid",
     "adminTitle": "Bets",
     "count": "Bets",
+    "houseNet": "House (stake − paid)",
     "rulesTitle": "Sports betting",
     "enabled": "Sports betting open",
     "maxStakeLabel": "Highest stake (whole units)",
@@ -2886,7 +2911,21 @@
     "balance": "Balance",
     "none": "No player found.",
     "open": "Open",
-    "owner": "By admin"
+    "owner": "By admin",
+    "sportsBets": "Football bets (win / loss)",
+    "sportsBetsHint": "Every sports slip with stake, odds, match result and payout.",
+    "playerNet": "Player net (paid − stake)",
+    "ledgerCasinoHint": "Casino, slots (Pragmatic) and Hannibal games appear below as ledger lines (stakes, wins, deposits).",
+    "colBet": "Bet",
+    "colWin": "Win",
+    "colLoss": "Loss",
+    "colNet": "Net",
+    "slipDetails": "Full bet slips (matches and odds)",
+    "ledgerAll": "All",
+    "ledgerSports": "Sports",
+    "ledgerCasino": "Casino & games",
+    "ledgerDeposit": "Deposits & bonuses",
+    "ledgerFilterHint": "Filter the ledger. Sports stakes use reference bet:…; casino and slots use other bet lines."
   },
   "freeSpins": {
     "title": "{count} FREE SPINS",

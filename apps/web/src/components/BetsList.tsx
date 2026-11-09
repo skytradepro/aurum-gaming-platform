@@ -1,4 +1,5 @@
 import '@/styles/sportsbook.css';
+import { Link } from '@/i18n/routing';
 import { findCurrency, formatAmountMinor } from '@/lib/money-display';
 import { marketLabel, pickLabel } from '@/lib/sports-labels';
 import type { SbT } from '@/lib/sports-labels';
@@ -40,10 +41,22 @@ export interface BetView {
   settledAt: string | null;
   selections: BetSelectionView[];
   player?: string;
+  playerId?: string;
 }
 
 /** Bet slips with every match, the odds taken, the result and the money. Used by the player and by the back office. */
-export async function BetsList({ bets, currencies, locale }: { bets: BetView[]; currencies: CurrencyDTO[]; locale: string }) {
+export async function BetsList({
+  bets,
+  currencies,
+  locale,
+  linkPlayers = true,
+}: {
+  bets: BetView[];
+  currencies: CurrencyDTO[];
+  locale: string;
+  /** When false (e.g. on the player detail page), hide the username link. */
+  linkPlayers?: boolean;
+}) {
   const t = await getTranslations('bets');
   const ts = (await getTranslations('sbk')) as unknown as SbT;
   if (bets.length === 0) return <p>{t('none')}</p>;
@@ -56,8 +69,19 @@ export async function BetsList({ bets, currencies, locale }: { bets: BetView[]; 
           <div key={b.id} className="card" style={{ marginBottom: '1rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
               <strong>
-                #{b.id} · {b.kind === 'single' ? t('single') : t('accumulator')}
-                {b.player ? ` · ${b.player}` : ''}
+                #{b.id} ·                 {b.kind === 'single' ? t('single') : t('accumulator')}
+                {b.player ? (
+                  <>
+                    {' · '}
+                    {linkPlayers && b.playerId ? (
+                      <Link href={`/admin/players/${b.playerId}`} className="admin-player-link">
+                        {b.player}
+                      </Link>
+                    ) : (
+                      b.player
+                    )}
+                  </>
+                ) : null}
               </strong>
               <span className="badge">{t(`status_${b.status}` as never)}</span>
             </div>

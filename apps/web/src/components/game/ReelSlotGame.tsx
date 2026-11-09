@@ -9,6 +9,7 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { BassArt, type BassArtKind } from './BassArt';
 import { GameAiButton } from './GameInfo';
+import { primeSound } from './freeSpins';
 import { plain, useRound, type RoundResponse } from './useRound';
 
 /**
@@ -72,6 +73,11 @@ class ReelSound {
   }
   tick() {
     this.tone(1900, 0.03, 'sine', 0.02);
+  }
+  /** Unlocks Web Audio after the player's first tap (mobile browsers). */
+  prime() {
+    const ac = this.ac;
+    if (ac?.state === 'suspended') void ac.resume();
   }
   big() {
     [0, 4, 7, 12, 16, 19, 24].forEach((s, i) => this.tone(440 * 2 ** (s / 12), 0.26, 'triangle', 0.07, i * 0.1));
@@ -350,6 +356,32 @@ export function ReelSlotGame({ game, currency, locale, initialBalanceMinor }: { 
     }
   }, []);
 
+  /** Welcome motion: reels spin briefly when the game opens so the machine feels alive. */
+  useEffect(() => {
+    let alive = true;
+    const introMs = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 0 : 720;
+    if (introMs <= 0) return;
+    setSpinning(new Array<boolean>(RS_REELS).fill(true));
+    const timer = window.setTimeout(() => {
+      if (!alive) return;
+      setSpinning(new Array<boolean>(RS_REELS).fill(false));
+    }, introMs);
+    return () => {
+      alive = false;
+      window.clearTimeout(timer);
+    };
+  }, [game]);
+
+  useEffect(() => {
+    const onPrime = () => {
+      sound.current.prime();
+      primeSound();
+      if (sound.current.on) sound.current.spin();
+    };
+    window.addEventListener('pointerdown', onPrime, { once: true });
+    return () => window.removeEventListener('pointerdown', onPrime);
+  }, []);
+
   /** Animation time, shorter in turbo mode or when the phone asks for less motion. */
   const ms = (n: number) => {
     const reduce = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -405,6 +437,10 @@ export function ReelSlotGame({ game, currency, locale, initialBalanceMinor }: { 
     const next = !soundOn;
     setSoundOn(next);
     sound.current.on = next;
+    if (next) {
+      sound.current.prime();
+      primeSound();
+    }
     try {
       localStorage.setItem('cb-sound', next ? '1' : '0');
     } catch {
@@ -445,6 +481,7 @@ export function ReelSlotGame({ game, currency, locale, initialBalanceMinor }: { 
     setVals(new Map(values.map((v) => [v.cell, v.milli])));
     setBlurSeed((s) => s + 1);
     setSpinning(new Array<boolean>(RS_REELS).fill(true));
+    if (sound.current.on) sound.current.spin();
     await wait(Math.max(0, anim(480) - (performance.now() - started)));
     let scatters = 0;
     for (let reel = 0; reel < RS_REELS; reel += 1) {

@@ -5,7 +5,7 @@ import { PERMISSIONS } from '@aurum/shared';
 import { ApiError, apiClient } from '@/lib/api';
 import { Link, useRouter } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { PERM_LABEL, StaffCredit, fromMinor } from './StaffManager';
 import type { StaffCurrency, StaffRow } from './StaffManager';
 
@@ -25,7 +25,17 @@ export interface StaffPlayer {
  * the players he created with their balances, and his options: permissions, stop / allow sign-in,
  * temporary password, delete.
  */
-export function StaffDetail({ staff, players, currencies }: { staff: StaffRow; players: StaffPlayer[]; currencies: StaffCurrency[] }) {
+export function StaffDetail({
+  staff,
+  players,
+  currencies,
+  children,
+}: {
+  staff: StaffRow;
+  players: StaffPlayer[];
+  currencies: StaffCurrency[];
+  children?: ReactNode;
+}) {
   const t = useTranslations('staffCredit');
   const tc = useTranslations('adminContent');
   const tCommon = useTranslations('admin.common');
@@ -107,6 +117,8 @@ export function StaffDetail({ staff, players, currencies }: { staff: StaffRow; p
         ← {t('back')}
       </Link>
 
+      {children}
+
       <section className="card staff-head">
         <div className="shop-card-head">
           <div>
@@ -148,18 +160,18 @@ export function StaffDetail({ staff, players, currencies }: { staff: StaffRow; p
         ) : null}
         <div className="shop-actions">
           {active ? (
-            <button type="button" className="btn btn-ghost btn-sm shop-stop" disabled={busy} onClick={() => setStatus('suspended')}>
+            <button type="button" className="btn btn-sm admin-chip tone-danger" disabled={busy} onClick={() => setStatus('suspended')}>
               {t('stopLogin')}
             </button>
           ) : (
-            <button type="button" className="btn btn-gold btn-sm" disabled={busy} onClick={() => setStatus('active')}>
+            <button type="button" className="btn btn-sm admin-chip tone-in" disabled={busy} onClick={() => setStatus('active')}>
               {t('allowLogin')}
             </button>
           )}
-          <button type="button" className="btn btn-ghost btn-sm" disabled={busy} onClick={resetPassword}>
+          <button type="button" className="btn btn-sm admin-chip tone-players" disabled={busy} onClick={resetPassword}>
             {tCommon('resetPassword')}
           </button>
-          <button type="button" className="btn btn-ghost btn-sm shop-stop" disabled={busy} onClick={remove}>
+          <button type="button" className="btn btn-sm admin-chip tone-danger" disabled={busy} onClick={remove}>
             {t('delete')}
           </button>
         </div>
